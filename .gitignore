@@ -1,0 +1,27 @@
+﻿# Large data files
+DATA/raw/reading_pane_data.json
+frontend/public/data/reading_pane_data.json
+
+# Node modules and cache
+node_modules/
+*/node_modules/
+frontend/node_modules/
+.cache/
+*/.cache/
+frontend/node_modules/.cache/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+
+# Build output
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
