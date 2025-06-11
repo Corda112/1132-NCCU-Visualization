@@ -1,0 +1,86 @@
+{
+  "generated_at": "2025-06-12T00:49:13.854893",
+  "overall_statistics": {
+    "total_processed": 56041,
+    "successful_rate": 1.0,
+    "retweet_rate": 0.0004996341963919273,
+    "error_rate": 0.0,
+    "empty_after_cleaning_rate": 0.0
+  },
+  "performance_statistics": {
+    "total_batches": 58,
+    "total_processing_time": 2777.2950353622437,
+    "avg_batch_time": 47.88439716141799,
+    "median_batch_time": 48.13842523097992,
+    "max_batch_time": 97.0544056892395,
+    "min_batch_time": 39.04981350898743
+  },
+  "quality_analysis": {
+    "text_length_distribution": {
+      "short": 21849,
+      "long": 8763,
+      "very_short": 6777,
+      "medium": 15591,
+      "very_long": 3061
+    },
+    "token_count_distribution": {
+      "medium": 15945,
+      "many": 12931,
+      "few": 17761,
+      "very_few": 8154,
+      "very_many": 1250
+    },
+    "processing_steps_effectiveness": {
+      "urls_mentions_removed": 0.9455220285148374,
+      "emojis_converted": 0.45566638710943774,
+      "stopwords_removed": 0.9162577398690245,
+      "lemmatized": 0.696971859888296
+    },
+    "quality_issues_summary": {
+      "too_short": 0,
+      "too_long": 707,
+      "no_meaningful_content": 0
+    },
+    "special_tokens_summary": {
+      "top_crypto_symbols": {
+        "$btc": 5258,
+        "$eth": 910,
+        "$xrp": 511,
+        "$dog": 341,
+        "$sol": 323,
+        "$hex": 281,
+        "$link": 261,
+        "$ada": 208,
+        "$doge": 200,
+        "$usd": 181
+      },
+      "top_emojis": {
+        ":rocket:": 4681,
+        ":fire:": 4142,
+        ":police_car_light:": 2708,
+        ":backhand_index_pointing_down:": 2623,
+        ":eyes:": 2063,
+        ":check_mark_button:": 1510,
+        ":wavy_dash:": 1417,
+        ":high_voltage:": 952,
+        ":money_bag:": 947,
+        ":face_with_tears_of_joy:": 922
+      },
+      "top_hashtags": {
+        "bitcoin": 37927,
+        "eth": 1665,
+        "defi": 550,
+        "crypto": 30
+      }
+    }
+  },
+  "recommendations": [
+    "發現 10 種加密貨幣符號，文本清洗器成功保留了特殊符號"
+  ],
+  "config_used": {
+    "min_text_length": 3,
+    "max_text_length": 500,
+    "allow_empty_after_cleaning": false,
+    "retweet_threshold": 0.1
+  }
+}
