@@ -1,0 +1,57 @@
+# 資料處理配置文件
+processing:
+  # 路徑配置
+  paths:
+    raw_data: "DATA/raw"
+    processed_data: "DATA/processed"
+    logs: "logs"
+    temp: "DATA/tmp"
+  
+  # 文本處理參數
+  text_cleaning:
+    remove_retweets: true
+    preserve_hashtags: true
+    preserve_crypto_symbols: true
+    remove_urls: true
+    remove_mentions: true
+    convert_emojis: true
+    apply_lemmatization: true
+    language: "en"
+    
+    # 自訂停用詞
+    extra_stopwords:
+      - "rt"
+      - "lol" 
+      - "hodl"
+      - "gm"
+      - "gn"
+      - "btc"
+      - "crypto"
+      - "blockchain"
+    
+    # 特殊token模式
+    crypto_symbol_pattern: "\\$[a-zA-Z]{2,10}"
+    hashtag_pattern: "#[a-zA-Z0-9_]+"
+    mention_pattern: "@\\w+"
+    url_pattern: "(http\\S+)|(www\\.\\S+)|(pic\\.twitter\\.com/\\S+)"
+  
+  # 處理效能參數
+  performance:
+    batch_size: 1000
+    max_workers: 16
+    chunk_size: 10000
+    
+  # 資料品質檢核
+  quality_checks:
+    min_text_length: 3
+    max_text_length: 500
+    allow_empty_after_cleaning: false
+    retweet_threshold: 0.1  # 超過10%轉推比例會警告
+
+# 日誌配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_rotation: true
+  max_file_size: "10MB"
+  backup_count: 5 
