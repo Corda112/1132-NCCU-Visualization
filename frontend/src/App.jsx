@@ -1,64 +1,12 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import './App.css';
 import KLineChart from './components/KLineChart';
 import UASTLChart from './components/UASTLChart';
-import ProjectIntro from './components/ProjectIntro';
-import RightPanel from './components/RightPanel';
+import ProjectIntro from './components/ProjectIntro'; // 引入 ProjectIntro 組件
 
 function App() {
     const [selectedRange, setSelectedRange] = useState(null);
-    const [activeTab, setActiveTab] = useState('charts'); // 'intro' or 'charts'
-    const [rightPanelTab, setRightPanelTab] = useState('sentiment'); // sentiment, term, ngram, cluster, reading_pane
-
-    // Data states
-    const [loading, setLoading] = useState(true);
-    const [termFreqData, setTermFreqData] = useState(null);
-    const [semanticData, setSemanticData] = useState(null);
-    const [readingPaneData, setReadingPaneData] = useState(null);
-    const [error, setError] = useState(null); // Add error state
-
-    // Filter states for Reading Pane
-    const [filters, setFilters] = useState({
-        term: '',
-        ngram: '',
-        cluster_id: '',
-        semantic_query: ''
-    });
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                setError(null); // Reset error state
-                const [termRes, semanticRes, readingRes] = await Promise.all([
-                    fetch('/data/term_ngram_frequency.json'),
-                    fetch('/data/semantic_clustering_sentiment.json'),
-                    fetch('/data/reading_pane_data.json')
-                ]);
-
-                // Check for HTTP errors
-                if (!termRes.ok || !semanticRes.ok || !readingRes.ok) {
-                    throw new Error(`HTTP error! status: ${termRes.status} ${semanticRes.status} ${readingRes.status}`);
-                }
-
-                const termData = await termRes.json();
-                const semanticData = await semanticRes.json();
-                const readingData = await readingRes.json();
-
-                setTermFreqData(termData);
-                setSemanticData(semanticData);
-                setReadingPaneData(readingData);
-
-            } catch (error) {
-                console.error("Failed to fetch data:", error);
-                setError(error.message); // Set error state
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
+    const [activeTab, setActiveTab] = useState('intro'); // 'intro' 或 'charts'
 
     const handleRangeChange = useCallback((range) => {
         setSelectedRange(range);
@@ -66,7 +14,7 @@ function App() {
 
     const renderContent = () => {
         if (activeTab === 'intro') {
-            return <ProjectIntro />;
+            return <ProjectIntro />; // 使用 ProjectIntro 組件
         } else if (activeTab === 'charts') {
             return (
                 <main className="main-dashboard">
@@ -109,18 +57,42 @@ function App() {
 
                     {/* Right Panel - Analysis & Insights */}
                     <aside className="insights-panel">
-                        <RightPanel
-                            activeTab={rightPanelTab}
-                            setActiveTab={setRightPanelTab}
-                            loading={loading}
-                            error={error} // Pass error state down
-                            selectedRange={selectedRange}
-                            termFreqData={termFreqData}
-                            semanticData={semanticData}
-                            readingPaneData={readingPaneData}
-                            filters={filters}
-                            setFilters={setFilters}
-                        />
+                        {/* Sentiment Analysis Section */}
+                        <section className="sentiment-section-sidebar">
+                            <div className="section-header">
+                                <h2 className="section-title">
+                                    <span className="title-icon">📊</span>
+                                    社群情緒分析
+                                </h2>
+                            </div>
+                            <div className="sentiment-chart-sidebar">
+                                <span>內容待添加</span>
+                            </div>
+                        </section>
+
+                        <div className="panel-header">
+                            <h3>分析洞察</h3>
+                        </div>
+
+                        <div className="insight-card">
+                            <h4>市場情緒指標</h4>
+                            <span>內容待添加</span>
+                        </div>
+
+                        <div className="insight-card">
+                            <h4>價格預測</h4>
+                            <span>內容待添加</span>
+                        </div>
+
+                        <div className="insight-card">
+                            <h4>關鍵指標</h4>
+                            <span>內容待添加</span>
+                        </div>
+
+                        <div className="insight-card">
+                            <h4>最新消息影響</h4>
+                            <span>內容待添加</span>
+                        </div>
                     </aside>
                 </main>
             );
@@ -136,7 +108,7 @@ function App() {
                         <h1 className="main-title">Bitcoin 情緒分析視覺化系統</h1>
                     </div>
 
-                    {/* Tabs Navigation */}
+                    {/* 新增的頁籤區域 */}
                     <nav className="tabs-navigation">
                         <button
                             className={`tab-button ${activeTab === 'intro' ? 'active' : ''}`}
@@ -148,7 +120,7 @@ function App() {
                             className={`tab-button ${activeTab === 'charts' ? 'active' : ''}`}
                             onClick={() => setActiveTab('charts')}
                         >
-                            儀表板
+                            K線 & UASTL
                         </button>
                     </nav>
 
@@ -169,7 +141,7 @@ function App() {
                 </div>
             </header>
 
-            {renderContent()}
+            {renderContent()} {/* 根據 activeTab 渲染內容 */}
         </div>
     );
 }
