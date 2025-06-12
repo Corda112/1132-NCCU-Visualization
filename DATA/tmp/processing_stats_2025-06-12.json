@@ -1,0 +1,2117 @@
+{
+  "processing_summary": {
+    "total_files": 58,
+    "successful_files": 58,
+    "failed_files": 0,
+    "success_rate": 1.0,
+    "total_tweets_input": 56100,
+    "total_tweets_output": 56100,
+    "total_processing_time": 2777.2950353622437,
+    "avg_processing_time_per_file": 47.88439716141799
+  },
+  "failed_files": [],
+  "file_results": [
+    {
+      "input_file": "DATA\\raw\\20210501-20210601.json",
+      "output_file": "DATA\\processed\\cleaned_20210501-20210601.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 40.87977170944214,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9977777777777778,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 40.87977170944214,
+          "avg_processing_time_per_item": 0.04542196856604682
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 464679,
+          "size_mb": 0.44,
+          "modified_time": "2025-06-11T22:06:04.130215",
+          "created_time": "2025-06-11T22:06:04.130215"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1884154,
+          "size_mb": 1.8,
+          "modified_time": "2025-06-12T00:46:43.723412",
+          "created_time": "2025-06-12T00:46:43.719412"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20210201-20210301.json",
+      "output_file": "DATA\\processed\\cleaned_20210201-20210301.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 41.05115795135498,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 41.05115795135498,
+          "avg_processing_time_per_item": 0.04561239772372776
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 464614,
+          "size_mb": 0.44,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1889161,
+          "size_mb": 1.8,
+          "modified_time": "2025-06-12T00:46:43.806738",
+          "created_time": "2025-06-12T00:46:43.791618"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20210401-20210501.json",
+      "output_file": "DATA\\processed\\cleaned_20210401-20210501.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 41.287835121154785,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9977777777777778,
+          "retweet_rate": 0.0,
+          "processing_time": 41.287835121154785,
+          "avg_processing_time_per_item": 0.04587537235683865
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 467855,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.130215",
+          "created_time": "2025-06-11T22:06:04.130215"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1907939,
+          "size_mb": 1.82,
+          "modified_time": "2025-06-12T00:46:44.051774",
+          "created_time": "2025-06-12T00:46:44.040103"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20210301-20210401.json",
+      "output_file": "DATA\\processed\\cleaned_20210301-20210401.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 41.38384175300598,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9977777777777778,
+          "retweet_rate": 0.0022222222222222222,
+          "processing_time": 41.38384175300598,
+          "avg_processing_time_per_item": 0.045982046392228866
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 467076,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.129528",
+          "created_time": "2025-06-11T22:06:04.129528"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1906943,
+          "size_mb": 1.82,
+          "modified_time": "2025-06-12T00:46:44.154803",
+          "created_time": "2025-06-12T00:46:44.140115"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20210601-20210701.json",
+      "output_file": "DATA\\processed\\cleaned_20210601-20210701.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 41.408038854599,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9977777777777778,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 41.408038854599,
+          "avg_processing_time_per_item": 0.04600893206066555
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 477257,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.130215",
+          "created_time": "2025-06-11T22:06:04.130215"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1994957,
+          "size_mb": 1.9,
+          "modified_time": "2025-06-12T00:46:44.254894",
+          "created_time": "2025-06-12T00:46:44.249096"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20210701-20210801.json",
+      "output_file": "DATA\\processed\\cleaned_20210701-20210801.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 41.80904936790466,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 41.80904936790466,
+          "avg_processing_time_per_item": 0.04645449929767185
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 474708,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.130215",
+          "created_time": "2025-06-11T22:06:04.130215"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1987225,
+          "size_mb": 1.9,
+          "modified_time": "2025-06-12T00:46:44.671838",
+          "created_time": "2025-06-12T00:46:44.655802"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20210101-20210201.json",
+      "output_file": "DATA\\processed\\cleaned_20210101-20210201.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 42.21794390678406,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 42.21794390678406,
+          "avg_processing_time_per_item": 0.0469088265630934
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 469219,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1947842,
+          "size_mb": 1.86,
+          "modified_time": "2025-06-12T00:46:44.981887",
+          "created_time": "2025-06-12T00:46:44.969885"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20201001-20201101.json",
+      "output_file": "DATA\\processed\\cleaned_20201001-20201101.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 42.8026065826416,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 42.8026065826416,
+          "avg_processing_time_per_item": 0.04755845175849067
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 477279,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2026370,
+          "size_mb": 1.93,
+          "modified_time": "2025-06-12T00:46:45.541135",
+          "created_time": "2025-06-12T00:46:45.534130"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20200901-20201001.json",
+      "output_file": "DATA\\processed\\cleaned_20200901-20201001.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 43.057703733444214,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 43.057703733444214,
+          "avg_processing_time_per_item": 0.04784189303716024
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 486966,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2124657,
+          "size_mb": 2.03,
+          "modified_time": "2025-06-12T00:46:45.768112",
+          "created_time": "2025-06-12T00:46:45.768112"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20200501-20200601.json",
+      "output_file": "DATA\\processed\\cleaned_20200501-20200601.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 43.29373908042908,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 43.29373908042908,
+          "avg_processing_time_per_item": 0.04810415453381008
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 482891,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2078622,
+          "size_mb": 1.98,
+          "modified_time": "2025-06-12T00:46:45.997618",
+          "created_time": "2025-06-12T00:46:45.997618"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20201201-20210101.json",
+      "output_file": "DATA\\processed\\cleaned_20201201-20210101.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 44.07664442062378,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 44.07664442062378,
+          "avg_processing_time_per_item": 0.04897404935624864
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 484967,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2087727,
+          "size_mb": 1.99,
+          "modified_time": "2025-06-12T00:46:46.804854",
+          "created_time": "2025-06-12T00:46:46.804854"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20201101-20201201.json",
+      "output_file": "DATA\\processed\\cleaned_20201101-20201201.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 44.312570095062256,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9977777777777778,
+          "retweet_rate": 0.0,
+          "processing_time": 44.312570095062256,
+          "avg_processing_time_per_item": 0.04923618899451362
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 487596,
+          "size_mb": 0.47,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2129469,
+          "size_mb": 2.03,
+          "modified_time": "2025-06-12T00:46:47.061301",
+          "created_time": "2025-06-12T00:46:47.045284"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20200801-20200901.json",
+      "output_file": "DATA\\processed\\cleaned_20200801-20200901.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 44.38055205345154,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 44.38055205345154,
+          "avg_processing_time_per_item": 0.049311724503835044
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 489921,
+          "size_mb": 0.47,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2153879,
+          "size_mb": 2.05,
+          "modified_time": "2025-06-12T00:46:47.101746",
+          "created_time": "2025-06-12T00:46:47.093630"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20200701-20200801.json",
+      "output_file": "DATA\\processed\\cleaned_20200701-20200801.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 45.1369845867157,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0,
+          "processing_time": 45.1369845867157,
+          "avg_processing_time_per_item": 0.05015220509635077
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 496254,
+          "size_mb": 0.47,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2193053,
+          "size_mb": 2.09,
+          "modified_time": "2025-06-12T00:46:47.852105",
+          "created_time": "2025-06-12T00:46:47.834824"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20200601-20200701.json",
+      "output_file": "DATA\\processed\\cleaned_20200601-20200701.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 45.45307016372681,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9944444444444445,
+          "retweet_rate": 0.0044444444444444444,
+          "processing_time": 45.45307016372681,
+          "avg_processing_time_per_item": 0.050503411293029786
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 496404,
+          "size_mb": 0.47,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2197511,
+          "size_mb": 2.1,
+          "modified_time": "2025-06-12T00:46:48.172992",
+          "created_time": "2025-06-12T00:46:48.157306"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20211001-20211101.json",
+      "output_file": "DATA\\processed\\cleaned_20211001-20211101.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.0717875957489,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0,
+          "processing_time": 48.0717875957489,
+          "avg_processing_time_per_item": 0.05341309732860989
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 471207,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.146645",
+          "created_time": "2025-06-11T22:06:04.146645"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1951633,
+          "size_mb": 1.86,
+          "modified_time": "2025-06-12T00:47:32.179070",
+          "created_time": "2025-06-12T00:47:32.179070"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20210801-20210901.json",
+      "output_file": "DATA\\processed\\cleaned_20210801-20210901.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.88998198509216,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 48.88998198509216,
+          "avg_processing_time_per_item": 0.054322202205657956
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 470620,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.130215",
+          "created_time": "2025-06-11T22:06:04.130215"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1966766,
+          "size_mb": 1.88,
+          "modified_time": "2025-06-12T00:47:32.674797",
+          "created_time": "2025-06-12T00:47:32.666784"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220101-20220201.json",
+      "output_file": "DATA\\processed\\cleaned_20220101-20220201.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.144198179244995,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9955555555555555,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 48.144198179244995,
+          "avg_processing_time_per_item": 0.05349355353249444
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 481814,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.146645",
+          "created_time": "2025-06-11T22:06:04.146645"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2063030,
+          "size_mb": 1.97,
+          "modified_time": "2025-06-12T00:47:32.852899",
+          "created_time": "2025-06-12T00:47:32.852899"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20210901-20211001.json",
+      "output_file": "DATA\\processed\\cleaned_20210901-20211001.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.922727823257446,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 48.922727823257446,
+          "avg_processing_time_per_item": 0.054358586470286054
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 6296965,
+          "size_mb": 6.01,
+          "modified_time": "2025-06-11T22:06:04.146645",
+          "created_time": "2025-06-11T22:06:04.146645"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 8486118,
+          "size_mb": 8.09,
+          "modified_time": "2025-06-12T00:47:32.952858",
+          "created_time": "2025-06-12T00:47:32.926720"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20211101-20211201.json",
+      "output_file": "DATA\\processed\\cleaned_20211101-20211201.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.77992486953735,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0,
+          "processing_time": 48.77992486953735,
+          "avg_processing_time_per_item": 0.05419991652170817
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 483879,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.146645",
+          "created_time": "2025-06-11T22:06:04.146645"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2088196,
+          "size_mb": 1.99,
+          "modified_time": "2025-06-12T00:47:32.985491",
+          "created_time": "2025-06-12T00:47:32.985491"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220201-20220301.json",
+      "output_file": "DATA\\processed\\cleaned_20220201-20220301.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.81242561340332,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9977777777777778,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 48.81242561340332,
+          "avg_processing_time_per_item": 0.054236028459337025
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 478983,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.146645",
+          "created_time": "2025-06-11T22:06:04.146645"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2043157,
+          "size_mb": 1.95,
+          "modified_time": "2025-06-12T00:47:33.856266",
+          "created_time": "2025-06-12T00:47:33.855263"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20211201-20220101.json",
+      "output_file": "DATA\\processed\\cleaned_20211201-20220101.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 49.52454876899719,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0,
+          "processing_time": 49.52454876899719,
+          "avg_processing_time_per_item": 0.055027276409996884
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 489041,
+          "size_mb": 0.47,
+          "modified_time": "2025-06-11T22:06:04.146645",
+          "created_time": "2025-06-11T22:06:04.146645"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2127564,
+          "size_mb": 2.03,
+          "modified_time": "2025-06-12T00:47:33.840149",
+          "created_time": "2025-06-12T00:47:33.825324"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220301-20220401.json",
+      "output_file": "DATA\\processed\\cleaned_20220301-20220401.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.35633993148804,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9977777777777778,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 48.35633993148804,
+          "avg_processing_time_per_item": 0.053729266590542266
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 473378,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.146645",
+          "created_time": "2025-06-11T22:06:04.146645"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1999859,
+          "size_mb": 1.91,
+          "modified_time": "2025-06-12T00:47:33.968540",
+          "created_time": "2025-06-12T00:47:33.952212"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220401-20220501.json",
+      "output_file": "DATA\\processed\\cleaned_20220401-20220501.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.4289767742157,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 48.4289767742157,
+          "avg_processing_time_per_item": 0.053809974193573
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 473732,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.161867",
+          "created_time": "2025-06-11T22:06:04.146645"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1980312,
+          "size_mb": 1.89,
+          "modified_time": "2025-06-12T00:47:34.491410",
+          "created_time": "2025-06-12T00:47:34.485411"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220501-20220601.json",
+      "output_file": "DATA\\processed\\cleaned_20220501-20220601.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 47.68995690345764,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 47.68995690345764,
+          "avg_processing_time_per_item": 0.052988841003841824
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 467776,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.162873",
+          "created_time": "2025-06-11T22:06:04.162873"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1939134,
+          "size_mb": 1.85,
+          "modified_time": "2025-06-12T00:47:34.579528",
+          "created_time": "2025-06-12T00:47:34.572519"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220701-20220801.json",
+      "output_file": "DATA\\processed\\cleaned_20220701-20220801.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.132652282714844,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 48.132652282714844,
+          "avg_processing_time_per_item": 0.053480724758572046
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 467455,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1926460,
+          "size_mb": 1.84,
+          "modified_time": "2025-06-12T00:47:35.294976",
+          "created_time": "2025-06-12T00:47:35.279155"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220801-20220901.json",
+      "output_file": "DATA\\processed\\cleaned_20220801-20220901.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 47.401301860809326,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9955555555555555,
+          "retweet_rate": 0.0033333333333333335,
+          "processing_time": 47.401301860809326,
+          "avg_processing_time_per_item": 0.05266811317867703
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 462430,
+          "size_mb": 0.44,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1867244,
+          "size_mb": 1.78,
+          "modified_time": "2025-06-12T00:47:35.312649",
+          "created_time": "2025-06-12T00:47:35.310642"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220401-20200501.json",
+      "output_file": "DATA\\processed\\cleaned_20220401-20200501.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 49.92519950866699,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 49.92519950866699,
+          "avg_processing_time_per_item": 0.05547244389851888
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 497940,
+          "size_mb": 0.47,
+          "modified_time": "2025-06-11T22:06:04.146645",
+          "created_time": "2025-06-11T22:06:04.146645"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2207903,
+          "size_mb": 2.11,
+          "modified_time": "2025-06-12T00:47:35.782559",
+          "created_time": "2025-06-12T00:47:35.766927"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220601-20220701.json",
+      "output_file": "DATA\\processed\\cleaned_20220601-20220701.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.877774238586426,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 48.877774238586426,
+          "avg_processing_time_per_item": 0.05430863804287381
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 473117,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1981401,
+          "size_mb": 1.89,
+          "modified_time": "2025-06-12T00:47:35.996527",
+          "created_time": "2025-06-12T00:47:35.980854"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20220901-20221001.json",
+      "output_file": "DATA\\processed\\cleaned_20220901-20221001.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.35139775276184,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9966666666666667,
+          "retweet_rate": 0.0,
+          "processing_time": 48.35139775276184,
+          "avg_processing_time_per_item": 0.053723775280846486
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 471669,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1970344,
+          "size_mb": 1.88,
+          "modified_time": "2025-06-12T00:47:36.594423",
+          "created_time": "2025-06-12T00:47:36.582608"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20200101-20200401.json",
+      "output_file": "DATA\\processed\\cleaned_20200101-20200401.json",
+      "input_count": 1800,
+      "output_count": 1800,
+      "processing_time": 97.0544056892395,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 1800,
+          "successful_rate": 0.9966666666666667,
+          "retweet_rate": 0.0033333333333333335,
+          "processing_time": 97.0544056892395,
+          "avg_processing_time_per_item": 0.053919114271799726
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 1015454,
+          "size_mb": 0.97,
+          "modified_time": "2025-06-11T22:06:04.113734",
+          "created_time": "2025-06-11T22:06:04.113734"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 4651005,
+          "size_mb": 4.44,
+          "modified_time": "2025-06-12T00:47:39.768522",
+          "created_time": "2025-06-12T00:21:57.023441"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20221001-20221101.json",
+      "output_file": "DATA\\processed\\cleaned_20221001-20221101.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 48.82647633552551,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 48.82647633552551,
+          "avg_processing_time_per_item": 0.05425164037280612
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 472294,
+          "size_mb": 0.45,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1977615,
+          "size_mb": 1.89,
+          "modified_time": "2025-06-12T00:48:21.068834",
+          "created_time": "2025-06-12T00:48:21.054667"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20221101-20221201.json",
+      "output_file": "DATA\\processed\\cleaned_20221101-20221201.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 50.29963040351868,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 50.29963040351868,
+          "avg_processing_time_per_item": 0.05588847822613186
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 489520,
+          "size_mb": 0.47,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2122223,
+          "size_mb": 2.02,
+          "modified_time": "2025-06-12T00:48:23.028927",
+          "created_time": "2025-06-12T00:48:23.018926"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20230101-20230201.json",
+      "output_file": "DATA\\processed\\cleaned_20230101-20230201.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 50.03928303718567,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 50.03928303718567,
+          "avg_processing_time_per_item": 0.05559920337465074
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 479063,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 1999080,
+          "size_mb": 1.91,
+          "modified_time": "2025-06-12T00:48:23.074986",
+          "created_time": "2025-06-12T00:48:23.058426"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20221201-20230101.json",
+      "output_file": "DATA\\processed\\cleaned_20221201-20230101.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 50.31188225746155,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0,
+          "processing_time": 50.31188225746155,
+          "avg_processing_time_per_item": 0.0559020913971795
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 486355,
+          "size_mb": 0.46,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2104098,
+          "size_mb": 2.01,
+          "modified_time": "2025-06-12T00:48:23.236588",
+          "created_time": "2025-06-12T00:48:23.236588"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20230201-20230301.json",
+      "output_file": "DATA\\processed\\cleaned_20230201-20230301.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 50.70435929298401,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9977777777777778,
+          "retweet_rate": 0.0,
+          "processing_time": 50.70435929298401,
+          "avg_processing_time_per_item": 0.056338176992204454
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 489561,
+          "size_mb": 0.47,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2112243,
+          "size_mb": 2.01,
+          "modified_time": "2025-06-12T00:48:23.781782",
+          "created_time": "2025-06-12T00:48:23.770782"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20230301-20230401.json",
+      "output_file": "DATA\\processed\\cleaned_20230301-20230401.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 51.36282253265381,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 51.36282253265381,
+          "avg_processing_time_per_item": 0.05706980281405979
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 499347,
+          "size_mb": 0.48,
+          "modified_time": "2025-06-11T22:06:04.163297",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2196369,
+          "size_mb": 2.09,
+          "modified_time": "2025-06-12T00:48:25.296387",
+          "created_time": "2025-06-12T00:48:25.280709"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20230501-20230601.json",
+      "output_file": "DATA\\processed\\cleaned_20230501-20230601.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 52.36064958572388,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 52.36064958572388,
+          "avg_processing_time_per_item": 0.058178499539693194
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 514083,
+          "size_mb": 0.49,
+          "modified_time": "2025-06-11T22:06:04.179526",
+          "created_time": "2025-06-11T22:06:04.179526"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2350033,
+          "size_mb": 2.24,
+          "modified_time": "2025-06-12T00:48:26.386683",
+          "created_time": "2025-06-12T00:48:26.369977"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20230401-20230501.json",
+      "output_file": "DATA\\processed\\cleaned_20230401-20230501.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 53.11534810066223,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9977777777777778,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 53.11534810066223,
+          "avg_processing_time_per_item": 0.05901705344518026
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 517239,
+          "size_mb": 0.49,
+          "modified_time": "2025-06-11T22:06:04.178521",
+          "created_time": "2025-06-11T22:06:04.163297"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2371474,
+          "size_mb": 2.26,
+          "modified_time": "2025-06-12T00:48:27.059418",
+          "created_time": "2025-06-12T00:48:27.048697"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20230701-20230801.json",
+      "output_file": "DATA\\processed\\cleaned_20230701-20230801.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 52.49494552612305,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0,
+          "processing_time": 52.49494552612305,
+          "avg_processing_time_per_item": 0.05832771725124783
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 518622,
+          "size_mb": 0.49,
+          "modified_time": "2025-06-11T22:06:04.182930",
+          "created_time": "2025-06-11T22:06:04.182930"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2386736,
+          "size_mb": 2.28,
+          "modified_time": "2025-06-12T00:48:27.127695",
+          "created_time": "2025-06-12T00:48:27.116260"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20230601-20230701.json",
+      "output_file": "DATA\\processed\\cleaned_20230601-20230701.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 53.054609060287476,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 53.054609060287476,
+          "avg_processing_time_per_item": 0.05894956562254164
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 517981,
+          "size_mb": 0.49,
+          "modified_time": "2025-06-11T22:06:04.179526",
+          "created_time": "2025-06-11T22:06:04.179526"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2392301,
+          "size_mb": 2.28,
+          "modified_time": "2025-06-12T00:48:27.603416",
+          "created_time": "2025-06-12T00:48:27.586813"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20230901-20231001.json",
+      "output_file": "DATA\\processed\\cleaned_20230901-20231001.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 54.15491557121277,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0,
+          "processing_time": 54.15491557121277,
+          "avg_processing_time_per_item": 0.060172128412458635
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 535269,
+          "size_mb": 0.51,
+          "modified_time": "2025-06-11T22:06:04.182930",
+          "created_time": "2025-06-11T22:06:04.182930"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2573632,
+          "size_mb": 2.45,
+          "modified_time": "2025-06-12T00:48:29.630697",
+          "created_time": "2025-06-12T00:48:29.630697"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20230801-20230901.json",
+      "output_file": "DATA\\processed\\cleaned_20230801-20230901.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 54.22291946411133,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 54.22291946411133,
+          "avg_processing_time_per_item": 0.06024768829345703
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 533426,
+          "size_mb": 0.51,
+          "modified_time": "2025-06-11T22:06:04.182930",
+          "created_time": "2025-06-11T22:06:04.182930"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2526276,
+          "size_mb": 2.41,
+          "modified_time": "2025-06-12T00:48:29.686794",
+          "created_time": "2025-06-12T00:48:29.686794"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20231101-20231201.json",
+      "output_file": "DATA\\processed\\cleaned_20231101-20231201.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 54.24318718910217,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 54.24318718910217,
+          "avg_processing_time_per_item": 0.0602702079878913
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 536564,
+          "size_mb": 0.51,
+          "modified_time": "2025-06-11T22:06:04.182930",
+          "created_time": "2025-06-11T22:06:04.182930"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2612285,
+          "size_mb": 2.49,
+          "modified_time": "2025-06-12T00:48:30.303073",
+          "created_time": "2025-06-12T00:48:30.288045"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20231201-20240101.json",
+      "output_file": "DATA\\processed\\cleaned_20231201-20240101.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 55.4676456451416,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 55.4676456451416,
+          "avg_processing_time_per_item": 0.06163071738349067
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 547850,
+          "size_mb": 0.52,
+          "modified_time": "2025-06-11T22:06:04.182930",
+          "created_time": "2025-06-11T22:06:04.182930"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2705381,
+          "size_mb": 2.58,
+          "modified_time": "2025-06-12T00:48:32.136921",
+          "created_time": "2025-06-12T00:48:32.134916"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20240101-20240201.json",
+      "output_file": "DATA\\processed\\cleaned_20240101-20240201.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 52.73485493659973,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 52.73485493659973,
+          "avg_processing_time_per_item": 0.05859428326288859
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 510777,
+          "size_mb": 0.49,
+          "modified_time": "2025-06-11T22:06:04.182930",
+          "created_time": "2025-06-11T22:06:04.182930"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2332483,
+          "size_mb": 2.22,
+          "modified_time": "2025-06-12T00:48:32.570241",
+          "created_time": "2025-06-12T00:48:32.570241"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20231001-20231101.json",
+      "output_file": "DATA\\processed\\cleaned_20231001-20231101.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 57.09381437301636,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 57.09381437301636,
+          "avg_processing_time_per_item": 0.06343757152557374
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 582374,
+          "size_mb": 0.56,
+          "modified_time": "2025-06-11T22:06:04.182930",
+          "created_time": "2025-06-11T22:06:04.182930"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 3052805,
+          "size_mb": 2.91,
+          "modified_time": "2025-06-12T00:48:32.936857",
+          "created_time": "2025-06-12T00:48:32.931297"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20240201-20240301.json",
+      "output_file": "DATA\\processed\\cleaned_20240201-20240301.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 39.627363443374634,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 39.627363443374634,
+          "avg_processing_time_per_item": 0.044030403825971814
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 517036,
+          "size_mb": 0.49,
+          "modified_time": "2025-06-11T22:06:04.182930",
+          "created_time": "2025-06-11T22:06:04.182930"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2376114,
+          "size_mb": 2.27,
+          "modified_time": "2025-06-12T00:49:00.758889",
+          "created_time": "2025-06-12T00:49:00.750229"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20240401-20240501.json",
+      "output_file": "DATA\\processed\\cleaned_20240401-20240501.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 39.04981350898743,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0,
+          "processing_time": 39.04981350898743,
+          "avg_processing_time_per_item": 0.0433886816766527
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 544562,
+          "size_mb": 0.52,
+          "modified_time": "2025-06-11T22:06:04.197336",
+          "created_time": "2025-06-11T22:06:04.196338"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2659055,
+          "size_mb": 2.54,
+          "modified_time": "2025-06-12T00:49:02.185968",
+          "created_time": "2025-06-12T00:49:02.180462"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20240301-20240401.json",
+      "output_file": "DATA\\processed\\cleaned_20240301-20240401.json",
+      "input_count": 900,
+      "output_count": 900,
+      "processing_time": 39.18889117240906,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 900,
+          "successful_rate": 0.9988888888888889,
+          "retweet_rate": 0.0011111111111111111,
+          "processing_time": 39.18889117240906,
+          "avg_processing_time_per_item": 0.04354321241378784
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 517036,
+          "size_mb": 0.49,
+          "modified_time": "2025-06-11T22:06:04.195191",
+          "created_time": "2025-06-11T22:06:04.195191"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2376114,
+          "size_mb": 2.27,
+          "modified_time": "2025-06-12T00:49:02.284384",
+          "created_time": "2025-06-12T00:49:02.277879"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20240501-20240601.json",
+      "output_file": "DATA\\processed\\cleaned_20240501-20240601.json",
+      "input_count": 1000,
+      "output_count": 1000,
+      "processing_time": 40.7430784702301,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 1000,
+          "successful_rate": 0.999,
+          "retweet_rate": 0.001,
+          "processing_time": 40.7430784702301,
+          "avg_processing_time_per_item": 0.0407430784702301
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 577131,
+          "size_mb": 0.55,
+          "modified_time": "2025-06-11T22:06:04.198337",
+          "created_time": "2025-06-11T22:06:04.198337"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2658628,
+          "size_mb": 2.54,
+          "modified_time": "2025-06-12T00:49:04.035751",
+          "created_time": "2025-06-12T00:49:04.020457"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20240701-20240801.json",
+      "output_file": "DATA\\processed\\cleaned_20240701-20240801.json",
+      "input_count": 1200,
+      "output_count": 1200,
+      "processing_time": 44.49458122253418,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 1200,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 44.49458122253418,
+          "avg_processing_time_per_item": 0.03707881768544515
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 669454,
+          "size_mb": 0.64,
+          "modified_time": "2025-06-11T22:06:04.203336",
+          "created_time": "2025-06-11T22:06:04.203336"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2956070,
+          "size_mb": 2.82,
+          "modified_time": "2025-06-12T00:49:09.858958",
+          "created_time": "2025-06-12T00:49:09.851491"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20240801-20240901.json",
+      "output_file": "DATA\\processed\\cleaned_20240801-20240901.json",
+      "input_count": 1200,
+      "output_count": 1200,
+      "processing_time": 43.98861241340637,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 1200,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 43.98861241340637,
+          "avg_processing_time_per_item": 0.03665717701117198
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 675789,
+          "size_mb": 0.64,
+          "modified_time": "2025-06-11T22:06:04.205336",
+          "created_time": "2025-06-11T22:06:04.205336"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 3009604,
+          "size_mb": 2.87,
+          "modified_time": "2025-06-12T00:49:10.452374",
+          "created_time": "2025-06-12T00:49:10.440374"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20241001-20241101.json",
+      "output_file": "DATA\\processed\\cleaned_20241001-20241101.json",
+      "input_count": 1200,
+      "output_count": 1200,
+      "processing_time": 43.40254306793213,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 1200,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 43.40254306793213,
+          "avg_processing_time_per_item": 0.03616878588994344
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 664016,
+          "size_mb": 0.63,
+          "modified_time": "2025-06-11T22:06:04.209336",
+          "created_time": "2025-06-11T22:06:04.209336"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 2913725,
+          "size_mb": 2.78,
+          "modified_time": "2025-06-12T00:49:10.616185",
+          "created_time": "2025-06-12T00:49:10.606178"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20241101-20241201.json",
+      "output_file": "DATA\\processed\\cleaned_20241101-20241201.json",
+      "input_count": 1200,
+      "output_count": 1200,
+      "processing_time": 43.124470949172974,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 1200,
+          "successful_rate": 0.9991666666666666,
+          "retweet_rate": 0.0,
+          "processing_time": 43.124470949172974,
+          "avg_processing_time_per_item": 0.03593705912431081
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 689641,
+          "size_mb": 0.66,
+          "modified_time": "2025-06-11T22:06:04.211337",
+          "created_time": "2025-06-11T22:06:04.211337"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 3171920,
+          "size_mb": 3.02,
+          "modified_time": "2025-06-12T00:49:10.788420",
+          "created_time": "2025-06-12T00:49:10.788420"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20240901-20241001.json",
+      "output_file": "DATA\\processed\\cleaned_20240901-20241001.json",
+      "input_count": 1200,
+      "output_count": 1200,
+      "processing_time": 43.790600538253784,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 1200,
+          "successful_rate": 1.0,
+          "retweet_rate": 0.0,
+          "processing_time": 43.790600538253784,
+          "avg_processing_time_per_item": 0.036492167115211485
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 713041,
+          "size_mb": 0.68,
+          "modified_time": "2025-06-11T22:06:04.207336",
+          "created_time": "2025-06-11T22:06:04.207336"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 3391727,
+          "size_mb": 3.23,
+          "modified_time": "2025-06-12T00:49:10.950349",
+          "created_time": "2025-06-12T00:49:10.941350"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20241201-20250101.json",
+      "output_file": "DATA\\processed\\cleaned_20241201-20250101.json",
+      "input_count": 1200,
+      "output_count": 1200,
+      "processing_time": 41.494202613830566,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 1200,
+          "successful_rate": 0.9991666666666666,
+          "retweet_rate": 0.0,
+          "processing_time": 41.494202613830566,
+          "avg_processing_time_per_item": 0.03457850217819214
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 676017,
+          "size_mb": 0.64,
+          "modified_time": "2025-06-11T22:06:04.213083",
+          "created_time": "2025-06-11T22:06:04.213083"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 3042033,
+          "size_mb": 2.9,
+          "modified_time": "2025-06-12T00:49:11.217378",
+          "created_time": "2025-06-12T00:34:59.921566"
+        }
+      }
+    },
+    {
+      "input_file": "DATA\\raw\\20240601-20240701.json",
+      "output_file": "DATA\\processed\\cleaned_20240601-20240701.json",
+      "input_count": 2000,
+      "output_count": 2000,
+      "processing_time": 49.988425493240356,
+      "success": true,
+      "quality_report": {
+        "batch_stats": {
+          "batch_size": 2000,
+          "successful_rate": 0.999,
+          "retweet_rate": 0.0,
+          "processing_time": 49.988425493240356,
+          "avg_processing_time_per_item": 0.024994212746620177
+        },
+        "quality_alerts": []
+      },
+      "file_stats": {
+        "input": {
+          "exists": true,
+          "size_bytes": 1200872,
+          "size_mb": 1.15,
+          "modified_time": "2025-06-11T22:06:04.201336",
+          "created_time": "2025-06-11T22:06:04.201336"
+        },
+        "output": {
+          "exists": true,
+          "size_bytes": 5818914,
+          "size_mb": 5.55,
+          "modified_time": "2025-06-12T00:49:13.843893",
+          "created_time": "2025-06-12T00:49:13.832832"
+        }
+      }
+    }
+  ],
+  "quality_summary": {
+    "generated_at": "2025-06-12T00:49:13.854893",
+    "overall_statistics": {
+      "total_processed": 56041,
+      "successful_rate": 1.0,
+      "retweet_rate": 0.0004996341963919273,
+      "error_rate": 0.0,
+      "empty_after_cleaning_rate": 0.0
+    },
+    "performance_statistics": {
+      "total_batches": 58,
+      "total_processing_time": 2777.2950353622437,
+      "avg_batch_time": 47.88439716141799,
+      "median_batch_time": 48.13842523097992,
+      "max_batch_time": 97.0544056892395,
+      "min_batch_time": 39.04981350898743
+    },
+    "quality_analysis": {
+      "text_length_distribution": {
+        "short": 21849,
+        "long": 8763,
+        "very_short": 6777,
+        "medium": 15591,
+        "very_long": 3061
+      },
+      "token_count_distribution": {
+        "medium": 15945,
+        "many": 12931,
+        "few": 17761,
+        "very_few": 8154,
+        "very_many": 1250
+      },
+      "processing_steps_effectiveness": {
+        "urls_mentions_removed": 0.9455220285148374,
+        "emojis_converted": 0.45566638710943774,
+        "stopwords_removed": 0.9162577398690245,
+        "lemmatized": 0.696971859888296
+      },
+      "quality_issues_summary": {
+        "too_short": 0,
+        "too_long": 707,
+        "no_meaningful_content": 0
+      },
+      "special_tokens_summary": {
+        "top_crypto_symbols": {
+          "$btc": 5258,
+          "$eth": 910,
+          "$xrp": 511,
+          "$dog": 341,
+          "$sol": 323,
+          "$hex": 281,
+          "$link": 261,
+          "$ada": 208,
+          "$doge": 200,
+          "$usd": 181
+        },
+        "top_emojis": {
+          ":rocket:": 4681,
+          ":fire:": 4142,
+          ":police_car_light:": 2708,
+          ":backhand_index_pointing_down:": 2623,
+          ":eyes:": 2063,
+          ":check_mark_button:": 1510,
+          ":wavy_dash:": 1417,
+          ":high_voltage:": 952,
+          ":money_bag:": 947,
+          ":face_with_tears_of_joy:": 922
+        },
+        "top_hashtags": {
+          "bitcoin": 37927,
+          "eth": 1665,
+          "defi": 550,
+          "crypto": 30
+        }
+      }
+    },
+    "recommendations": [
+      "發現 10 種加密貨幣符號，文本清洗器成功保留了特殊符號"
+    ],
+    "config_used": {
+      "min_text_length": 3,
+      "max_text_length": 500,
+      "allow_empty_after_cleaning": false,
+      "retweet_threshold": 0.1
+    }
+  },
+  "processing_config": {
+    "paths": {
+      "raw_data": "DATA/raw",
+      "processed_data": "DATA/processed",
+      "logs": "logs",
+      "temp": "DATA/tmp"
+    },
+    "text_cleaning": {
+      "remove_retweets": true,
+      "preserve_hashtags": true,
+      "preserve_crypto_symbols": true,
+      "remove_urls": true,
+      "remove_mentions": true,
+      "convert_emojis": true,
+      "apply_lemmatization": true,
+      "language": "en",
+      "extra_stopwords": [
+        "rt",
+        "lol",
+        "hodl",
+        "gm",
+        "gn",
+        "btc",
+        "crypto",
+        "blockchain"
+      ],
+      "crypto_symbol_pattern": "\\$[a-zA-Z]{2,10}",
+      "hashtag_pattern": "#[a-zA-Z0-9_]+",
+      "mention_pattern": "@\\w+",
+      "url_pattern": "(http\\S+)|(www\\.\\S+)|(pic\\.twitter\\.com/\\S+)"
+    },
+    "performance": {
+      "batch_size": 1000,
+      "max_workers": 16,
+      "chunk_size": 10000
+    },
+    "quality_checks": {
+      "min_text_length": 3,
+      "max_text_length": 500,
+      "allow_empty_after_cleaning": false,
+      "retweet_threshold": 0.1
+    }
+  },
+  "generated_at": "2025-06-12T00:49:13.854893"
+}

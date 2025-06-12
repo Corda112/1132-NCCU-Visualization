@@ -1,6 +1,6 @@
 ﻿# Large data files
 DATA/raw/reading_pane_data.json
-frontend/public/data/reading_pane_data.json
+# frontend/public/data/reading_pane_data.json
 
 # Node modules and cache
 node_modules/
