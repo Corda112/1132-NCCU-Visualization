@@ -19,9 +19,21 @@ function KLineChart({ onRangeChange }) {
                 volume: +row.Volume
             })).sort((a, b) => a.date - b.date);
             setData(d);
-            setRange([0, d.length - 1]);
+
+            if (d.length > 0) {
+                const fullRangeIndices = [0, d.length - 1];
+                setRange(fullRangeIndices);
+
+                if (onRangeChange) {
+                    const fullRangeTime = {
+                        from: d[fullRangeIndices[0]].date.getTime(),
+                        to: d[fullRangeIndices[1]].date.getTime()
+                    };
+                    onRangeChange(fullRangeTime);
+                }
+            }
         });
-    }, []);
+    }, [onRangeChange]);
 
     useEffect(() => {
         if (!data.length) return;
@@ -141,7 +153,12 @@ function KLineChart({ onRangeChange }) {
                     const idx0 = Math.max(0, Math.floor((x0 - margin.left) / (width - margin.left - margin.right) * data.length));
                     const idx1 = Math.min(data.length - 1, Math.ceil((x1 - margin.left) / (width - margin.left - margin.right) * data.length));
                     setRange([idx0, idx1]);
-                    if (onRangeChange) onRangeChange([idx0, idx1]);
+
+                    const newRange = {
+                        from: data[idx0].date.getTime(),
+                        to: data[idx1].date.getTime()
+                    };
+                    if (onRangeChange) onRangeChange(newRange);
                 }
             });
         nav.append('g').call(brush).call(g => g.select('.overlay').attr('cursor', 'crosshair'));
@@ -179,7 +196,7 @@ function KLineChart({ onRangeChange }) {
             .attr('stroke', 'red')
             .attr('stroke-width', 3)
             .attr('opacity', 0.5);
-    }, [data, range]);
+    }, [data, range, onRangeChange]);
 
     return (
         <div style={{ width: '100%', height: '100%', background: 'none' }}>

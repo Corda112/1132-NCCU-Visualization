@@ -3,13 +3,24 @@ import './App.css';
 import KLineChart from './components/KLineChart';
 import UASTLChart from './components/UASTLChart';
 import ProjectIntro from './components/ProjectIntro'; // 引入 ProjectIntro 組件
+import SentimentChart from './components/SentimentChart'; // Import SentimentChart
+import FrequencyChart from './components/FrequencyChart'; // Import FrequencyChart
+import ClusteringScatterPlot from './components/ClusteringScatterPlot'; // Import ClusteringScatterPlot
+import ReadingPane from './components/ReadingPane'; // Import ReadingPane
 
 function App() {
     const [selectedRange, setSelectedRange] = useState(null);
-    const [activeTab, setActiveTab] = useState('intro'); // 'intro' 或 'charts'
+    const [activeTab, setActiveTab] = useState('charts'); // 'intro' or 'charts'
+    const [activeRightTab, setActiveRightTab] = useState('sentiment'); // New state for right panel tabs
+    const [filter, setFilter] = useState({}); // For reading pane
 
     const handleRangeChange = useCallback((range) => {
         setSelectedRange(range);
+        setFilter({}); // Reset filter when range changes
+    }, []);
+
+    const handleTermSelect = useCallback((newFilter) => {
+        setFilter(newFilter);
     }, []);
 
     const renderContent = () => {
@@ -57,41 +68,30 @@ function App() {
 
                     {/* Right Panel - Analysis & Insights */}
                     <aside className="insights-panel">
-                        {/* Sentiment Analysis Section */}
-                        <section className="sentiment-section-sidebar">
-                            <div className="section-header">
-                                <h2 className="section-title">
-                                    <span className="title-icon">📊</span>
-                                    社群情緒分析
-                                </h2>
+                        <div className="analysis-section">
+                            <div className="panel-header">
+                                <h3>分析洞察</h3>
+                                <nav className="tabs-navigation-right">
+                                    <button className={`tab-button-right ${activeRightTab === 'sentiment' ? 'active' : ''}`} onClick={() => setActiveRightTab('sentiment')}>社群情緒分析</button>
+                                    <button className={`tab-button-right ${activeRightTab === 'term' ? 'active' : ''}`} onClick={() => setActiveRightTab('term')}>術語</button>
+                                    <button className={`tab-button-right ${activeRightTab === 'ngram' ? 'active' : ''}`} onClick={() => setActiveRightTab('ngram')}>N-gram</button>
+                                    <button className={`tab-button-right ${activeRightTab === 'clustering' ? 'active' : ''}`} onClick={() => setActiveRightTab('clustering')}>聚類</button>
+                                </nav>
                             </div>
-                            <div className="sentiment-chart-sidebar">
-                                <span>內容待添加</span>
+
+                            <div className="insights-content">
+                                {activeRightTab === 'sentiment' && <SentimentChart range={selectedRange} onTermSelect={handleTermSelect} />}
+                                {activeRightTab === 'term' && <FrequencyChart range={selectedRange} type="term" onTermSelect={(term, date) => handleTermSelect({ term, date })} />}
+                                {activeRightTab === 'ngram' && <FrequencyChart range={selectedRange} type="ngram" onTermSelect={(term, date) => handleTermSelect({ term, date })} />}
+                                {activeRightTab === 'clustering' && <ClusteringScatterPlot range={selectedRange} />}
                             </div>
-                        </section>
-
-                        <div className="panel-header">
-                            <h3>分析洞察</h3>
                         </div>
 
-                        <div className="insight-card">
-                            <h4>市場情緒指標</h4>
-                            <span>內容待添加</span>
-                        </div>
-
-                        <div className="insight-card">
-                            <h4>價格預測</h4>
-                            <span>內容待添加</span>
-                        </div>
-
-                        <div className="insight-card">
-                            <h4>關鍵指標</h4>
-                            <span>內容待添加</span>
-                        </div>
-
-                        <div className="insight-card">
-                            <h4>最新消息影響</h4>
-                            <span>內容待添加</span>
+                        <div className="reading-pane-section">
+                            <div className="panel-header">
+                                <h3>關聯文章</h3>
+                            </div>
+                            <ReadingPane filter={filter} />
                         </div>
                     </aside>
                 </main>

@@ -48,10 +48,17 @@ function UASTLChart({ range }) {
                 return;
             }
 
-            if (range && range.length === 2) {
-                rawData = rawData.slice(range[0], range[1] + 1);
+            const dataWithDates = rawData.map(d => ({ ...d, dateObj: new Date(d.date) }));
+            let displayData = dataWithDates;
+
+            if (range && range.from && range.to) {
+                displayData = dataWithDates.filter(d => {
+                    const time = d.dateObj.getTime();
+                    return time >= range.from && time <= range.to;
+                });
             }
-            if (rawData.length === 0) return;
+
+            if (displayData.length === 0) return;
 
             const parentNode = svgRef.current.parentNode;
             const containerWidth = parentNode.clientWidth;
@@ -62,7 +69,7 @@ function UASTLChart({ range }) {
                 .attr("width", containerWidth)
                 .attr("height", containerHeight);
 
-            const firstDataPoint = rawData[0];
+            const firstDataPoint = displayData[0];
             const coPoint = firstDataPoint.coPoint_used ? +firstDataPoint.coPoint_used - 1 : null;
             const p_used_str = firstDataPoint.p_used || "7,90,365";
             const p_used = p_used_str.split(',').map(Number);
@@ -89,8 +96,9 @@ function UASTLChart({ range }) {
             const processedComponents = componentDefinitions.map(compDef => {
                 return {
                     ...compDef,
-                    plotData: rawData.map(d => {
+                    plotData: displayData.map(d => {
                         const item = {
+                            dateObj: d.dateObj,
                             mean: +d[`${compDef.dataKey}_mean`],
                             std: +d[`${compDef.dataKey}_std`],
                             corr: +d[`corr_${compDef.dataKey}`]
@@ -112,8 +120,8 @@ function UASTLChart({ range }) {
             const singleSubplotAllocatedHeight = (totalSubplotVerticalSpace / numComponents) - subplotSpacing;
             const drawableSubplotHeight = singleSubplotAllocatedHeight - correlationStripHeight;
 
-            const xScale = d3.scaleLinear()
-                .domain([0, rawData.length > 1 ? rawData.length - 1 : 1])
+            const xScale = d3.scaleTime()
+                .domain(d3.extent(displayData, d => d.dateObj))
                 .range([margin.left, containerWidth - margin.right]);
 
             const coolWarmColorScale = d3.scaleSequential(d3.interpolateRdBu).domain([1, -1]);
@@ -169,26 +177,110 @@ function UASTLChart({ range }) {
                     .attr("fill", "#f9f9f9")
                     .attr("stroke", "#e0e0e0");
 
+                const area99 = d3.area()
+                    .x(d => xScale(d.dateObj))
+                    .y0(d => yScale(d.mean - sigmaLevels['99%'] * d.std))
+                    .y1(d => yScale(d.mean + sigmaLevels['99%'] * d.std))
+                    .defined(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0);
+
+                subPlotGroup.append("path")
+                    .datum(component.plotData)
+                    .attr("fill", ciFillColor99)
+                    .attr("opacity", ciFillOpacity)
+                    .attr("d", area99);
+
+                const area50 = d3.area()
+                    .x(d => xScale(d.dateObj))
+                    .y0(d => yScale(d.mean - sigmaLevels['50%'] * d.std))
+                    .y1(d => yScale(d.mean + sigmaLevels['50%'] * d.std))
+                    .defined(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0);
+
+                subPlotGroup.append("path")
+                    .datum(component.plotData)
+                    .attr("fill", ciFillColor50)
+                    .attr("opacity", ciFillOpacity)
+                    .attr("d", area50);
+
+                for (let s = 1; s <= numSamples; s++) {
+                    const sampleKey = `sample${s}`;
+                    const line = d3.line()
+                        .x(d => xScale(d.dateObj))
+                        .y(d => yScale(d[sampleKey]))
+                        .defined(d => !isNaN(d[sampleKey]));
+
+                    subPlotGroup.append("path")
+                        .datum(component.plotData)
+                        .attr("fill", "none")
+                        .attr("stroke", sampleLineColors[(s - 1) % sampleLineColors.length])
+                        .attr("stroke-width", 1)
+                        .attr("opacity", 0.7)
+                        .attr("d", line);
+                }
+
+                const meanLine = d3.line()
+                    .x(d => xScale(d.dateObj))
+                    .y(d => yScale(d.mean))
+                    .defined(d => !isNaN(d.mean));
+
+                subPlotGroup.append("path")
+                    .datum(component.plotData)
+                    .attr("fill", "none")
+                    .attr("stroke", componentColors['residual'])
+                    .attr("stroke-width", 1.5)
+                    .attr("opacity", 0.95)
+                    .attr("d", meanLine);
+
                 subPlotGroup.append("g")
                     .attr("transform", `translate(${margin.left},0)`)
                     .call(d3.axisLeft(yScale).ticks(4).tickSizeOuter(0))
                     .selectAll("text").style("font-size", "9px");
 
+                const maxAbsCorrForComponent = d3.max(component.plotData, d => Math.abs(d.corr)) || 1;
+                component.plotData.forEach((d, idx) => {
+                    if (isNaN(d.corr)) return;
+
+                    const barX = xScale(d.dateObj);
+                    let barWidth = 2; // Default width
+                    if (idx < displayData.length - 1) {
+                        barWidth = xScale(displayData[idx + 1].dateObj) - barX;
+                    } else if (idx > 0) {
+                        barWidth = barX - xScale(displayData[idx - 1].dateObj);
+                    }
+
+                    const barHeightRatio = Math.abs(d.corr) / maxAbsCorrForComponent;
+                    const visualBarHeight = barHeightRatio * (correlationStripHeight / 2);
+
+                    let rectY;
+                    if (d.corr >= 0) {
+                        rectY = corrAreaY + (correlationStripHeight / 2) - visualBarHeight;
+                    } else {
+                        rectY = corrAreaY + (correlationStripHeight / 2);
+                    }
+
+                    subPlotGroup.append("rect")
+                        .attr("x", barX - barWidth / 2 + 0.5)
+                        .attr("y", rectY)
+                        .attr("width", Math.max(1, barWidth - 1))
+                        .attr("height", Math.max(0.5, visualBarHeight))
+                        .attr("fill", d3.rgb(coolWarmColorScale(d.corr)).darker(0.2).toString())
+                        .attr("stroke", "none");
+                });
+
                 if (i === numComponents - 1) {
-                    // Position the X-axis line for the last subplot precisely at the top of the bottom margin
                     const lastSubplotXAxisLineY = containerHeight - margin.bottom;
                     svg.append("g")
                         .attr("transform", `translate(0,${lastSubplotXAxisLineY})`)
-                        .call(d3.axisBottom(xScale).ticks(Math.min(10, Math.floor(rawData.length / 30) || 1)).tickSizeOuter(0))
-                        .selectAll("text").style("font-size", "9px");
+                        .call(d3.axisBottom(xScale).ticks(5).tickFormat(d3.timeFormat("%Y-%m-%d")))
+                        .selectAll("text").style("font-size", "9px")
+                        .attr("transform", "rotate(-45)")
+                        .style("text-anchor", "end");
 
-                    // Global X-axis title - this remains independently positioned near the absolute bottom
                     svg.append("text")
                         .attr("x", containerWidth / 2)
                         .attr("y", containerHeight - 10)
                         .attr("text-anchor", "middle")
                         .style("font-size", "11px")
-                        .text("Time Index (Days since start)");
+                        .text("Date");
                 }
 
                 subPlotGroup.append("text")
@@ -211,96 +303,8 @@ function UASTLChart({ range }) {
                         .attr("stroke-dasharray", "3,3");
                 }
 
-                const maxAbsCorrForComponent = d3.max(component.plotData, d => Math.abs(d.corr)) || 1;
-                component.plotData.forEach((d, idx) => {
-                    if (isNaN(d.corr)) return;
-
-                    const barX = xScale(idx);
-                    const barWidth = (xScale(idx + 1) || xScale(idx) + (xScale(1) - xScale(0))) - barX;
-                    if (barWidth <= 0) return;
-
-                    const barHeightRatio = Math.abs(d.corr) / maxAbsCorrForComponent;
-                    const visualBarHeight = barHeightRatio * (correlationStripHeight / 2);
-
-                    let rectY;
-                    if (d.corr >= 0) {
-                        rectY = corrAreaY + (correlationStripHeight / 2) - visualBarHeight;
-                    } else {
-                        rectY = corrAreaY + (correlationStripHeight / 2);
-                    }
-
-                    subPlotGroup.append("rect")
-                        .attr("x", barX - barWidth / 2 + 0.5) // Centering the bar
-                        .attr("y", rectY)
-                        .attr("width", Math.max(1, barWidth - 1)) // Small gap between bars
-                        .attr("height", Math.max(0.5, visualBarHeight))
-                        .attr("fill", d3.rgb(coolWarmColorScale(d.corr)).darker(0.2).toString()) // Made color deeper
-                        .attr("stroke", "none");
-                });
-
-                const area99 = d3.area()
-                    .x((_d, k) => xScale(k))
-                    .y0(d => yScale(d.mean - sigmaLevels['99%'] * d.std))
-                    .y1(d => yScale(d.mean + sigmaLevels['99%'] * d.std))
-                    .defined(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0);
-
-                if (component.plotData.some(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0)) {
-                    subPlotGroup.append("path")
-                        .datum(component.plotData)
-                        .attr("fill", ciFillColor99) // Use new CI color
-                        .attr("opacity", ciFillOpacity) // Use new CI opacity
-                        .attr("d", area99);
-                }
-
-                const area50 = d3.area()
-                    .x((_d, k) => xScale(k))
-                    .y0(d => yScale(d.mean - sigmaLevels['50%'] * d.std))
-                    .y1(d => yScale(d.mean + sigmaLevels['50%'] * d.std))
-                    .defined(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0);
-
-                if (component.plotData.some(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0)) {
-                    subPlotGroup.append("path")
-                        .datum(component.plotData)
-                        .attr("fill", ciFillColor50) // Use new CI color
-                        .attr("opacity", ciFillOpacity) // Use new CI opacity
-                        .attr("d", area50);
-                }
-
-                for (let s = 1; s <= numSamples; s++) {
-                    const sampleKey = `sample${s}`;
-                    const line = d3.line()
-                        .x((_d, k) => xScale(k))
-                        .y(d => yScale(d[sampleKey]))
-                        .defined(d => !isNaN(d[sampleKey]));
-
-                    if (component.plotData.some(d => !isNaN(d[sampleKey]))) {
-                        subPlotGroup.append("path")
-                            .datum(component.plotData)
-                            .attr("fill", "none")
-                            .attr("stroke", sampleLineColors[(s - 1) % sampleLineColors.length])
-                            .attr("stroke-width", 1)
-                            .attr("opacity", 0.7)
-                            .attr("d", line);
-                    }
-                }
-
-                const meanLine = d3.line()
-                    .x((_d, k) => xScale(k))
-                    .y(d => yScale(d.mean))
-                    .defined(d => !isNaN(d.mean));
-
-                if (component.plotData.some(d => !isNaN(d.mean))) {
-                    subPlotGroup.append("path")
-                        .datum(component.plotData)
-                        .attr("fill", "none")
-                        .attr("stroke", componentColors['residual']) // Use Residual component's color for ALL mean lines
-                        .attr("stroke-width", 1.5)
-                        .attr("opacity", 0.95) // Make mean line slightly more prominent
-                        .attr("d", meanLine);
-                }
-
-                if (coPoint !== null && coPoint >= 0 && coPoint < rawData.length) {
-                    const coPointX = xScale(coPoint);
+                if (coPoint !== null && coPoint >= 0 && coPoint < displayData.length) {
+                    const coPointX = xScale(displayData[coPoint].dateObj);
                     if (coPointX >= margin.left && coPointX <= containerWidth - margin.right) {
                         subPlotGroup.append("line")
                             .attr("x1", coPointX)

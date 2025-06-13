@@ -1,0 +1,89 @@
+.reading-pane {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.article-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+.article-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.article-text {
+    margin: 0 0 10px 0;
+    color: #333;
+    line-height: 1.6;
+}
+
+.article-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.sentiment-tag {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.sentiment-tag.Positive {
+    background-color: #28a745;
+}
+
+.sentiment-tag.Negative {
+    background-color: #dc3545;
+}
+
+.sentiment-tag.Neutral {
+    background-color: #6c757d;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    margin: 0 10px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.pagination span {
+    font-weight: bold;
+}
+
+.loading-pane,
+.info-pane {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 1.2rem;
+    color: #666;
+}
