@@ -6,6 +6,7 @@ import ProjectIntro from './components/ProjectIntro'; // 引入 ProjectIntro 組
 import SentimentChart from './components/SentimentChart'; // Import SentimentChart
 import FrequencyChart from './components/FrequencyChart'; // Import FrequencyChart
 import ClusteringScatterPlot from './components/ClusteringScatterPlot'; // Import ClusteringScatterPlot
+import ClusterDashboard from './components/ClusterDashboard';
 import ReadingPane from './components/ReadingPane'; // Import ReadingPane
 
 function App() {
@@ -83,7 +84,7 @@ function App() {
                                 {activeRightTab === 'sentiment' && <SentimentChart range={selectedRange} onTermSelect={handleTermSelect} />}
                                 {activeRightTab === 'term' && <FrequencyChart range={selectedRange} type="term" onTermSelect={(term, date) => handleTermSelect({ term, date })} />}
                                 {activeRightTab === 'ngram' && <FrequencyChart range={selectedRange} type="ngram" onTermSelect={(term, date) => handleTermSelect({ term, date })} />}
-                                {activeRightTab === 'clustering' && <ClusteringScatterPlot range={selectedRange} />}
+                                {activeRightTab === 'clustering' && <ClusterDashboard range={selectedRange} />}
                             </div>
                         </div>
 
