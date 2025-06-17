@@ -8,7 +8,7 @@ const sentimentColors = {
     Neutral: '#1f77b4'
 };
 
-function ClusterBubbleChart({ range, onSelect }) {
+function ClusterBubbleChart({ range, selectedCluster, onSelect }) {
     const svgRef = useRef();
     const [nodes, setNodes] = useState([]);
 
@@ -51,8 +51,8 @@ function ClusterBubbleChart({ range, onSelect }) {
             .append('circle')
             .attr('r', d => Math.sqrt(d.count) * 2 + 20)
             .attr('fill', d => sentimentColors[d.sentiment] || '#999')
-            .attr('stroke', '#fff')
-            .attr('stroke-width', 1.5)
+            .attr('stroke', d => d.id === selectedCluster ? '#ff0' : '#fff')
+            .attr('stroke-width', d => d.id === selectedCluster ? 3 : 1.5)
             .on('click', (event, d) => onSelect && onSelect(d.id));
 
         const label = svg.selectAll('text')
@@ -73,7 +73,7 @@ function ClusterBubbleChart({ range, onSelect }) {
         });
 
         return () => simulation.stop();
-    }, [nodes, onSelect]);
+    }, [nodes, selectedCluster, onSelect]);
 
     return (
         <svg ref={svgRef} style={{ width: '100%', height: '300px' }} />

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
 
-function ClusterTimeline({ range, onBrush }) {
+function ClusterTimeline({ range, selectedCluster, onBrush }) {
     const svgRef = useRef();
     const [stacked, setStacked] = useState([]);
     const [keys, setKeys] = useState([]);
@@ -59,13 +59,18 @@ function ClusterTimeline({ range, onBrush }) {
             .y0(d => y(d[0]))
             .y1(d => y(d[1]));
 
-        svg.selectAll('path.layer')
+        const layer = svg.selectAll('path.layer')
             .data(series)
             .enter()
             .append('path')
             .attr('class','layer')
             .attr('fill', d => color(d.key))
+            .attr('opacity', d => selectedCluster ? (d.key === selectedCluster ? 1 : 0.2) : 0.7)
             .attr('d', area);
+
+        if (selectedCluster) {
+            layer.filter(d => d.key === selectedCluster).raise();
+        }
 
         const brush = d3.brushX().extent([[40,20],[width-20,height-30]])
             .on('end', e => {
@@ -77,7 +82,7 @@ function ClusterTimeline({ range, onBrush }) {
                 if (onBrush) onBrush({start,end});
             });
         svg.append('g').call(brush);
-    }, [stacked, keys, onBrush]);
+    }, [stacked, keys, selectedCluster, onBrush]);
 
     return <svg ref={svgRef} style={{ width: '100%', height: '300px' }} />;
 }

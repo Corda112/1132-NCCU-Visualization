@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
 
-function ClusterHeatmap({ range }) {
+function ClusterHeatmap({ range, selectedCluster }) {
     const svgRef = useRef();
     const [matrix, setMatrix] = useState([]);
     const [clusters, setClusters] = useState([]);
@@ -48,49 +48,34 @@ function ClusterHeatmap({ range }) {
 
         const g = svg.append('g').attr('transform','translate(60,20)');
 
-        g.selectAll('g.row')
-            .data(matrix)
-            .enter()
-            .append('g')
-<<<<<<< HEAD
-            .attr('class', 'row')
-            .attr('transform', (d, i) => `translate(0,${i * gridHeight})`)
-            .each(function (row) {
-                d3.select(this)
-                    .selectAll('rect')
-                    .data(clusters)
-                    .enter()
-                    .append('rect')
-                    .attr('x', (c, j) => j * gridWidth)
-                    .attr('width', gridWidth)
-                    .attr('height', gridHeight)
-                    .attr('fill', c => color(row[c]))
-                    .append('title')
-                    .text(c => row[c]);
-            });
-=======
-            .attr('class','row')
-            .attr('transform', d => `translate(0,${clusters.indexOf(clusters[0])*gridHeight})`);
-
-        matrix.forEach((row, i) => {
-            clusters.forEach((c, j) => {
-                g.append('rect')
-                    .attr('x', j * gridWidth)
-                    .attr('y', i * gridHeight)
-                    .attr('width', gridWidth)
-                    .attr('height', gridHeight)
-                    .attr('fill', color(row[c]));
-                g.append('title').text(row[c]);
-            });
+    g.selectAll('g.row')
+        .data(matrix)
+        .enter()
+        .append('g')
+        .attr('class', 'row')
+        .attr('transform', (d, i) => `translate(0,${i * gridHeight})`)
+        .each(function (row) {
+            const cellG = d3.select(this);
+            cellG.selectAll('rect')
+                .data(clusters.map(c => ({ cluster: c, value: row[c] })))
+                .enter()
+                .append('rect')
+                .attr('x', (d, j) => j * gridWidth)
+                .attr('width', gridWidth)
+                .attr('height', gridHeight)
+                .attr('fill', d => color(d.value))
+                .attr('stroke', d => selectedCluster === d.cluster ? '#f00' : 'none')
+                .attr('stroke-width', d => selectedCluster === d.cluster ? 2 : 0)
+                .append('title')
+                .text(d => d.value);
         });
->>>>>>> origin/codex/提供推文情緒與集群視覺化方案
 
         svg.append('g').attr('transform',`translate(60,${height-20})`)
             .call(d3.axisBottom(d3.scaleBand().domain(months).range([0, months.length*gridWidth])))
             .selectAll('text').attr('transform','rotate(-40)').attr('text-anchor','end');
         svg.append('g').attr('transform','translate(60,20)')
             .call(d3.axisLeft(d3.scaleBand().domain(clusters).range([0, clusters.length*gridHeight])));
-    }, [matrix, clusters, months]);
+    }, [matrix, clusters, months, selectedCluster]);
 
     return <svg ref={svgRef} style={{ width: '100%', height: '300px' }} />;
 }

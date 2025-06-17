@@ -9,6 +9,20 @@ Start the backend server:
 cd backend && node server.js
 ```
 
+First-time setup requires installing dependencies:
+
+```bash
+npm install --prefix backend
+npm install --prefix frontend
+```
+
+An optional `setup.sh` script automates these steps and attempts to rebuild
+`sqlite3` for the current environment:
+
+```bash
+./setup.sh
+```
+
 Start the React frontend:
 
 ```bash
@@ -21,4 +35,17 @@ Run tests:
 npm test
 ```
 
+### Troubleshooting
+
+If the backend fails with `invalid ELF header`, rebuild `sqlite3` from source:
+
+```bash
+npm rebuild sqlite3 --build-from-source --prefix backend
+```
+
 Running `npm test` at the project root will execute the frontend test script.
+
+When `sqlite3` cannot be installed, the backend will fall back to small JSON
+datasets located in `backend/kline_sample.json` and `backend/uastl_sample.json`.
+These provide placeholder data so the server can start, though charts will only
+show limited information.

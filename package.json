@@ -3,5 +3,6 @@
   "private": true,
   "scripts": {
     "test": "npm --prefix frontend test"
+    ,"setup": "bash ./setup.sh"
   }
 }

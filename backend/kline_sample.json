@@ -1,0 +1,7 @@
+[
+  {"timestamp":"2020-01-01","Open":7200,"High":7300,"Low":7100,"Close":7205,"Volume":1000},
+  {"timestamp":"2020-01-02","Open":7205,"High":7350,"Low":7180,"Close":7300,"Volume":1100},
+  {"timestamp":"2020-01-03","Open":7300,"High":7400,"Low":7250,"Close":7380,"Volume":1050},
+  {"timestamp":"2020-01-04","Open":7380,"High":7450,"Low":7350,"Close":7420,"Volume":950},
+  {"timestamp":"2020-01-05","Open":7420,"High":7500,"Low":7400,"Close":7480,"Volume":980}
+]
