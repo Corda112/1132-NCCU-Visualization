@@ -4,15 +4,18 @@ import ClusterTimeline from './ClusterTimeline';
 import ClusterHeatmap from './ClusterHeatmap';
 import ClusterWordCloud from './ClusterWordCloud';
 
-function ClusterDashboard({ range }) {
+function ClusterDashboard({ range, onTermSelect }) {
     const [selected, setSelected] = useState(null);
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <ClusterBubbleChart range={range} onSelect={setSelected} />
-            <ClusterTimeline range={range} onBrush={() => {}} />
-            <ClusterHeatmap range={range} />
-            <ClusterWordCloud clusterId={selected} range={range} />
+            {selected !== null && (
+                <button style={{ alignSelf: 'flex-end' }} onClick={() => setSelected(null)}>Clear Selection</button>
+            )}
+            <ClusterBubbleChart range={range} selectedCluster={selected} onSelect={setSelected} />
+            <ClusterTimeline range={range} selectedCluster={selected} onBrush={() => {}} />
+            <ClusterHeatmap range={range} selectedCluster={selected} />
+            <ClusterWordCloud clusterId={selected} range={range} onTermClick={(term) => onTermSelect && onTermSelect({ term })} />
         </div>
     );
 }

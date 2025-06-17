@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
+import { sentimentColors } from '../colors';
 
 const SentimentChart = ({ range, onTermSelect }) => {
     const [chartData, setChartData] = useState([]);
@@ -48,6 +49,7 @@ const SentimentChart = ({ range, onTermSelect }) => {
         legend: {
             data: ['Positive', 'Negative', 'Neutral']
         },
+        color: [sentimentColors.Positive, sentimentColors.Negative, sentimentColors.Neutral],
         xAxis: {
             type: 'category',
             data: chartData.map(item => item.date)
