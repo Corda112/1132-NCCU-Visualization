@@ -45,7 +45,7 @@ npm rebuild sqlite3 --build-from-source --prefix backend
 
 Running `npm test` at the project root will execute the frontend test script.
 
-When `sqlite3` cannot be installed, the backend will fall back to small JSON
-datasets located in `backend/kline_sample.json` and `backend/uastl_sample.json`.
-These provide placeholder data so the server can start, though charts will only
-show limited information.
+When the Node `sqlite3` module cannot be installed, the server will attempt to
+query `db.sqlite3` using the `sqlite3` command line tool. If that also fails,
+the API uses bundled JSON files for sentiment and term data only, while the
+financial endpoints will return empty results.

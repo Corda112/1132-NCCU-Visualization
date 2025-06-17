@@ -9,6 +9,9 @@ function ClusterDashboard({ range, onTermSelect }) {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {selected !== null && (
+                <button style={{ alignSelf: 'flex-end' }} onClick={() => setSelected(null)}>Clear Selection</button>
+            )}
             <ClusterBubbleChart range={range} selectedCluster={selected} onSelect={setSelected} />
             <ClusterTimeline range={range} selectedCluster={selected} onBrush={() => {}} />
             <ClusterHeatmap range={range} selectedCluster={selected} />

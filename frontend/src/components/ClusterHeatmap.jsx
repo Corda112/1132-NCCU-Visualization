@@ -1,17 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
+import { clusterPalette } from '../colors';
 
 function ClusterHeatmap({ range, selectedCluster }) {
     const svgRef = useRef();
     const [matrix, setMatrix] = useState([]);
     const [clusters, setClusters] = useState([]);
     const [months, setMonths] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!range || !range.from || !range.to) return;
         const startDate = new Date(range.from).toISOString().split('T')[0];
         const endDate = new Date(range.to).toISOString().split('T')[0];
+        setLoading(true);
         axios.get('http://localhost:3001/api/clusters', { params: { startDate, endDate } })
             .then(res => {
                 const formatMonth = d3.timeFormat('%Y-%m');
@@ -31,7 +34,8 @@ function ClusterHeatmap({ range, selectedCluster }) {
                 setClusters(clustersArr);
                 setMonths(monthsArr);
             })
-            .catch(err => console.error('Heatmap fetch error', err));
+            .catch(err => console.error('Heatmap fetch error', err))
+            .finally(() => setLoading(false));
     }, [range]);
 
     useEffect(() => {
@@ -77,7 +81,12 @@ function ClusterHeatmap({ range, selectedCluster }) {
             .call(d3.axisLeft(d3.scaleBand().domain(clusters).range([0, clusters.length*gridHeight])));
     }, [matrix, clusters, months, selectedCluster]);
 
-    return <svg ref={svgRef} style={{ width: '100%', height: '300px' }} />;
+    return (
+        <div style={{ position: 'relative', width: '100%', height: '300px' }}>
+            {loading && <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)'}}>Loading...</div>}
+            <svg ref={svgRef} style={{ width: '100%', height: '100%' }} />
+        </div>
+    );
 }
 
 export default ClusterHeatmap;

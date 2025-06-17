@@ -1,11 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs');
+const { spawnSync } = require('child_process');
 let sqlite3;
 try {
     sqlite3 = require('sqlite3').verbose();
 } catch (e) {
-    console.warn('sqlite3 module not available, falling back to JSON data');
+    console.warn('sqlite3 module not available, using sqlite3 CLI fallback');
 }
 const path = require('path');
 
@@ -16,9 +17,9 @@ app.use(cors());
 app.use(express.json());
 
 // 資料庫初始化（若 sqlite3 不可用則使用 JSON 檔案）
+const dbPath = path.join(__dirname, 'db.sqlite3');
 let db = null;
 if (sqlite3) {
-    const dbPath = path.join(__dirname, 'db.sqlite3');
     db = new sqlite3.Database(dbPath, (err) => {
         if (err) {
             console.error('無法連接 SQLite:', err.message);
@@ -31,10 +32,18 @@ if (sqlite3) {
 // 載入備用 JSON 資料
 const semanticJSON = JSON.parse(fs.readFileSync(path.join(__dirname, 'Final_semantic_clustering_sentiment.json')));
 const termJSON = JSON.parse(fs.readFileSync(path.join(__dirname, 'Final_term_ngram_frequency.json')));
-const klineJSON = fs.existsSync(path.join(__dirname, 'kline_sample.json')) ?
-    JSON.parse(fs.readFileSync(path.join(__dirname, 'kline_sample.json'))) : [];
-const uastlJSON = fs.existsSync(path.join(__dirname, 'uastl_sample.json')) ?
-    JSON.parse(fs.readFileSync(path.join(__dirname, 'uastl_sample.json'))) : [];
+
+function runQuery(sql) {
+    const result = spawnSync('sqlite3', ['-json', dbPath, sql], { encoding: 'utf8' });
+    if (result.status !== 0) {
+        throw new Error(result.stderr.trim());
+    }
+    try {
+        return JSON.parse(result.stdout || '[]');
+    } catch (e) {
+        throw new Error('Failed to parse sqlite3 output');
+    }
+}
 
 // K線 API
 app.get('/api/kline', (req, res) => {
@@ -47,7 +56,12 @@ app.get('/api/kline', (req, res) => {
             }
         });
     } else {
-        res.json(klineJSON);
+        try {
+            const rows = runQuery('SELECT * FROM kline ORDER BY timestamp;');
+            res.json(rows);
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        }
     }
 });
 
@@ -62,7 +76,12 @@ app.get('/api/uastl', (req, res) => {
             }
         });
     } else {
-        res.json(uastlJSON);
+        try {
+            const rows = runQuery('SELECT * FROM uastl ORDER BY date;');
+            res.json(rows);
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        }
     }
 });
 
@@ -85,15 +104,26 @@ app.get('/api/semantic', (req, res) => {
             }
         });
     } else {
-        let rows = semanticJSON.map(d => ({ createdAt: d.createdAt, sentiment: d.sentiment }));
-        if (startDate && endDate) {
-            rows = rows.filter(r => {
-                const d = r.createdAt.split('T')[0];
-                return d >= startDate && d <= endDate;
-            });
+        try {
+            let query = 'SELECT createdAt, sentiment FROM semantic_clustering_sentiment';
+            if (startDate && endDate) {
+                query += ` WHERE date(createdAt) BETWEEN date('${startDate}') AND date('${endDate}')`;
+            }
+            query += ' ORDER BY createdAt';
+            const rows = runQuery(query);
+            res.json(rows);
+        } catch (e) {
+            // Fallback to JSON files
+            let rows = semanticJSON.map(d => ({ createdAt: d.createdAt, sentiment: d.sentiment }));
+            if (startDate && endDate) {
+                rows = rows.filter(r => {
+                    const d = r.createdAt.split('T')[0];
+                    return d >= startDate && d <= endDate;
+                });
+            }
+            rows.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+            res.json(rows);
         }
-        rows.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
-        res.json(rows);
     }
 });
 
@@ -116,19 +146,29 @@ app.get('/api/term-ngram', (req, res) => {
             }
         });
     } else {
-        let rows = [];
-        for (const date in termJSON) {
-            if (!termJSON.hasOwnProperty(date)) continue;
+        try {
+            let query = 'SELECT * FROM term_ngram_frequency';
             if (startDate && endDate) {
-                if (date < startDate || date > endDate) continue;
+                query += ` WHERE date(date) BETWEEN date('${startDate}') AND date('${endDate}')`;
             }
-            const terms = termJSON[date];
-            for (const term in terms) {
-                rows.push({ date, term, frequency: terms[term] });
+            query += ' ORDER BY date, frequency DESC';
+            const rows = runQuery(query);
+            res.json(rows);
+        } catch (e) {
+            let rows = [];
+            for (const date in termJSON) {
+                if (!Object.prototype.hasOwnProperty.call(termJSON, date)) continue;
+                if (startDate && endDate) {
+                    if (date < startDate || date > endDate) continue;
+                }
+                const terms = termJSON[date];
+                for (const term in terms) {
+                    rows.push({ date, term, frequency: terms[term] });
+                }
             }
+            rows.sort((a,b) => new Date(a.date) - new Date(b.date) || b.frequency - a.frequency);
+            res.json(rows);
         }
-        rows.sort((a,b) => new Date(a.date) - new Date(b.date) || b.frequency - a.frequency);
-        res.json(rows);
     }
 });
 
@@ -188,25 +228,43 @@ app.get('/api/articles', (req, res) => {
             });
         });
     } else {
-        let results = semanticJSON;
-        if (term) {
-            const t = term.toLowerCase();
-            results = results.filter(d => d.cleaned_text.toLowerCase().includes(t));
+        try {
+            let query = `SELECT id, cleaned_text, createdAt, sentiment FROM semantic_clustering_sentiment`;
+            const conditions = [];
+            if (term) conditions.push(`cleaned_text LIKE '%${term.replace(/'/g,"''")}%'`);
+            if (date) conditions.push(`date(createdAt) = date('${date}')`);
+            if (sentiment) conditions.push(`sentiment = '${sentiment}'`);
+            if (conditions.length > 0) {
+                query += ' WHERE ' + conditions.join(' AND ');
+            }
+            query += ` ORDER BY createdAt DESC LIMIT ${limit} OFFSET ${offset}`;
+            const articles = runQuery(query);
+            const countQuery = conditions.length > 0 ?
+                `SELECT COUNT(*) as count FROM semantic_clustering_sentiment WHERE ${conditions.join(' AND ')}` :
+                'SELECT COUNT(*) as count FROM semantic_clustering_sentiment';
+            const count = runQuery(countQuery)[0]?.count || 0;
+            res.json({ articles, totalPages: Math.ceil(count / limit) });
+        } catch (e) {
+            let results = semanticJSON;
+            if (term) {
+                const t = term.toLowerCase();
+                results = results.filter(d => d.cleaned_text.toLowerCase().includes(t));
+            }
+            if (date) {
+                results = results.filter(d => d.createdAt.startsWith(date));
+            }
+            if (sentiment) {
+                results = results.filter(d => d.sentiment === sentiment);
+            }
+            const totalPages = Math.ceil(results.length / limit);
+            const articles = results.slice(offset, offset + Number(limit)).map(d => ({
+                id: d.id,
+                cleaned_text: d.cleaned_text,
+                createdAt: d.createdAt,
+                sentiment: d.sentiment
+            }));
+            res.json({ articles, totalPages });
         }
-        if (date) {
-            results = results.filter(d => d.createdAt.startsWith(date));
-        }
-        if (sentiment) {
-            results = results.filter(d => d.sentiment === sentiment);
-        }
-        const totalPages = Math.ceil(results.length / limit);
-        const articles = results.slice(offset, offset + Number(limit)).map(d => ({
-            id: d.id,
-            cleaned_text: d.cleaned_text,
-            createdAt: d.createdAt,
-            sentiment: d.sentiment
-        }));
-        res.json({ articles, totalPages });
     }
 });
 
@@ -228,21 +286,30 @@ app.get('/api/clusters', (req, res) => {
             }
         });
     } else {
-        let rows = semanticJSON.map(d => ({
-            x: d.x,
-            y: d.y,
-            cluster_id: d.cluster_id,
-            cleaned_text: d.cleaned_text,
-            sentiment: d.sentiment,
-            createdAt: d.createdAt
-        }));
-        if (startDate && endDate) {
-            rows = rows.filter(r => {
-                const d = r.createdAt.split('T')[0];
-                return d >= startDate && d <= endDate;
-            });
+        try {
+            let query = 'SELECT x, y, cluster_id, cleaned_text, sentiment, createdAt FROM semantic_clustering_sentiment';
+            if (startDate && endDate) {
+                query += ` WHERE date(createdAt) BETWEEN date('${startDate}') AND date('${endDate}')`;
+            }
+            const rows = runQuery(query);
+            res.json(rows);
+        } catch (e) {
+            let rows = semanticJSON.map(d => ({
+                x: d.x,
+                y: d.y,
+                cluster_id: d.cluster_id,
+                cleaned_text: d.cleaned_text,
+                sentiment: d.sentiment,
+                createdAt: d.createdAt
+            }));
+            if (startDate && endDate) {
+                rows = rows.filter(r => {
+                    const d = r.createdAt.split('T')[0];
+                    return d >= startDate && d <= endDate;
+                });
+            }
+            res.json(rows);
         }
-        res.json(rows);
     }
 });
 
