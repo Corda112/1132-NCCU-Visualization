@@ -1,0 +1,161 @@
+2025-06-12 00:21:15,350 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:21:15,359 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:21:15,362 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:21:15,376 - data_processor.text_cleaner - INFO - 設定驗證完成
+2025-06-12 00:21:42,740 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:21:42,740 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:21:42,740 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:21:42,761 - data_processor.text_cleaner - INFO - 設定驗證完成
+2025-06-12 00:21:51,223 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:21:51,223 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:21:51,223 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:21:51,238 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20200101-20200401.json
+2025-06-12 00:21:57,039 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20200101-20200401.json -> DATA\processed\cleaned_20200101-20200401.json (1800 -> 1800 條)
+2025-06-12 00:25:49,588 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:25:49,588 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:25:49,588 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:25:49,608 - data_processor.text_cleaner - INFO - 設定驗證完成
+2025-06-12 00:29:46,729 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:29:46,729 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:29:46,729 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:29:46,744 - data_processor.text_cleaner - INFO - 設定驗證完成
+2025-06-12 00:30:13,329 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:30:13,329 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:30:13,329 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:30:13,346 - data_processor.text_cleaner - INFO - 設定驗證完成
+2025-06-12 00:31:39,941 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:31:39,942 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:31:39,942 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:31:39,955 - data_processor.text_cleaner - INFO - 設定驗證完成
+2025-06-12 00:32:38,562 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:32:38,562 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:32:38,565 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:32:38,583 - data_processor.text_cleaner - INFO - 設定驗證完成
+2025-06-12 00:34:56,378 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:34:56,378 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:34:56,378 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:34:56,378 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20241201-20250101.json
+2025-06-12 00:34:59,925 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20241201-20250101.json -> DATA\processed\cleaned_20241201-20250101.json (1200 -> 1200 條)
+2025-06-12 00:46:02,668 - data_processor.text_cleaner - INFO - TextCleaner 初始化完成
+2025-06-12 00:46:02,668 - data_processor.quality_monitor - INFO - QualityMonitor 初始化完成
+2025-06-12 00:46:02,668 - data_processor.main - INFO - DataProcessor 初始化完成
+2025-06-12 00:46:02,668 - data_processor.main - INFO - 開始批次處理目錄: DATA\raw
+2025-06-12 00:46:02,668 - data_processor.main - INFO - 找到 58 個檔案待處理
+2025-06-12 00:46:02,668 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20200101-20200401.json
+2025-06-12 00:46:02,668 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20200501-20200601.json
+2025-06-12 00:46:02,668 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20200601-20200701.json
+2025-06-12 00:46:02,668 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20200701-20200801.json
+2025-06-12 00:46:02,676 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20200801-20200901.json
+2025-06-12 00:46:02,676 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20200901-20201001.json
+2025-06-12 00:46:02,677 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20201001-20201101.json
+2025-06-12 00:46:02,678 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20201101-20201201.json
+2025-06-12 00:46:02,687 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20201201-20210101.json
+2025-06-12 00:46:02,688 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20210101-20210201.json
+2025-06-12 00:46:02,688 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20210201-20210301.json
+2025-06-12 00:46:02,688 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20210301-20210401.json
+2025-06-12 00:46:02,694 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20210401-20210501.json
+2025-06-12 00:46:02,696 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20210501-20210601.json
+2025-06-12 00:46:02,698 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20210601-20210701.json
+2025-06-12 00:46:02,702 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20210701-20210801.json
+2025-06-12 00:46:43,723 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20210501-20210601.json -> DATA\processed\cleaned_20210501-20210601.json (900 -> 900 條)
+2025-06-12 00:46:43,739 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20210801-20210901.json
+2025-06-12 00:46:43,819 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20210201-20210301.json -> DATA\processed\cleaned_20210201-20210301.json (900 -> 900 條)
+2025-06-12 00:46:43,823 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20210901-20211001.json
+2025-06-12 00:46:44,056 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20210401-20210501.json -> DATA\processed\cleaned_20210401-20210501.json (900 -> 900 條)
+2025-06-12 00:46:44,056 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20211001-20211101.json
+2025-06-12 00:46:44,163 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20210301-20210401.json -> DATA\processed\cleaned_20210301-20210401.json (900 -> 900 條)
+2025-06-12 00:46:44,174 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20211101-20211201.json
+2025-06-12 00:46:44,260 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20210601-20210701.json -> DATA\processed\cleaned_20210601-20210701.json (900 -> 900 條)
+2025-06-12 00:46:44,267 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20211201-20220101.json
+2025-06-12 00:46:44,671 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20210701-20210801.json -> DATA\processed\cleaned_20210701-20210801.json (900 -> 900 條)
+2025-06-12 00:46:44,691 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220101-20220201.json
+2025-06-12 00:46:44,992 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20210101-20210201.json -> DATA\processed\cleaned_20210101-20210201.json (900 -> 900 條)
+2025-06-12 00:46:44,998 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220201-20220301.json
+2025-06-12 00:46:45,550 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20201001-20201101.json -> DATA\processed\cleaned_20201001-20201101.json (900 -> 900 條)
+2025-06-12 00:46:45,564 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220301-20220401.json
+2025-06-12 00:46:45,783 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20200901-20201001.json -> DATA\processed\cleaned_20200901-20201001.json (900 -> 900 條)
+2025-06-12 00:46:45,802 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220401-20200501.json
+2025-06-12 00:46:46,014 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20200501-20200601.json -> DATA\processed\cleaned_20200501-20200601.json (900 -> 900 條)
+2025-06-12 00:46:46,017 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220401-20220501.json
+2025-06-12 00:46:46,820 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20201201-20210101.json -> DATA\processed\cleaned_20201201-20210101.json (900 -> 900 條)
+2025-06-12 00:46:46,820 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220501-20220601.json
+2025-06-12 00:46:47,061 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20201101-20201201.json -> DATA\processed\cleaned_20201101-20201201.json (900 -> 900 條)
+2025-06-12 00:46:47,077 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220601-20220701.json
+2025-06-12 00:46:47,103 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20200801-20200901.json -> DATA\processed\cleaned_20200801-20200901.json (900 -> 900 條)
+2025-06-12 00:46:47,125 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220701-20220801.json
+2025-06-12 00:46:47,866 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20200701-20200801.json -> DATA\processed\cleaned_20200701-20200801.json (900 -> 900 條)
+2025-06-12 00:46:47,866 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220801-20220901.json
+2025-06-12 00:46:48,188 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20200601-20200701.json -> DATA\processed\cleaned_20200601-20200701.json (900 -> 900 條)
+2025-06-12 00:46:48,194 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20220901-20221001.json
+2025-06-12 00:47:32,179 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20211001-20211101.json -> DATA\processed\cleaned_20211001-20211101.json (900 -> 900 條)
+2025-06-12 00:47:32,194 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20221001-20221101.json
+2025-06-12 00:47:32,678 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20210801-20210901.json -> DATA\processed\cleaned_20210801-20210901.json (900 -> 900 條)
+2025-06-12 00:47:32,682 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20221101-20221201.json
+2025-06-12 00:47:32,868 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220101-20220201.json -> DATA\processed\cleaned_20220101-20220201.json (900 -> 900 條)
+2025-06-12 00:47:32,868 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20221201-20230101.json
+2025-06-12 00:47:32,959 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20210901-20211001.json -> DATA\processed\cleaned_20210901-20211001.json (900 -> 900 條)
+2025-06-12 00:47:32,972 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20230101-20230201.json
+2025-06-12 00:47:33,007 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20211101-20211201.json -> DATA\processed\cleaned_20211101-20211201.json (900 -> 900 條)
+2025-06-12 00:47:33,019 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20230201-20230301.json
+2025-06-12 00:47:33,856 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220201-20220301.json -> DATA\processed\cleaned_20220201-20220301.json (900 -> 900 條)
+2025-06-12 00:47:33,856 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20211201-20220101.json -> DATA\processed\cleaned_20211201-20220101.json (900 -> 900 條)
+2025-06-12 00:47:33,871 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20230301-20230401.json
+2025-06-12 00:47:33,886 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20230401-20230501.json
+2025-06-12 00:47:33,968 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220301-20220401.json -> DATA\processed\cleaned_20220301-20220401.json (900 -> 900 條)
+2025-06-12 00:47:33,986 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20230501-20230601.json
+2025-06-12 00:47:34,503 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220401-20220501.json -> DATA\processed\cleaned_20220401-20220501.json (900 -> 900 條)
+2025-06-12 00:47:34,508 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20230601-20230701.json
+2025-06-12 00:47:34,582 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220501-20220601.json -> DATA\processed\cleaned_20220501-20220601.json (900 -> 900 條)
+2025-06-12 00:47:34,587 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20230701-20230801.json
+2025-06-12 00:47:35,324 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220701-20220801.json -> DATA\processed\cleaned_20220701-20220801.json (900 -> 900 條)
+2025-06-12 00:47:35,326 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220801-20220901.json -> DATA\processed\cleaned_20220801-20220901.json (900 -> 900 條)
+2025-06-12 00:47:35,326 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20230801-20230901.json
+2025-06-12 00:47:35,344 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20230901-20231001.json
+2025-06-12 00:47:35,782 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220401-20200501.json -> DATA\processed\cleaned_20220401-20200501.json (900 -> 900 條)
+2025-06-12 00:47:35,798 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20231001-20231101.json
+2025-06-12 00:47:35,996 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220601-20220701.json -> DATA\processed\cleaned_20220601-20220701.json (900 -> 900 條)
+2025-06-12 00:47:36,012 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20231101-20231201.json
+2025-06-12 00:47:36,603 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20220901-20221001.json -> DATA\processed\cleaned_20220901-20221001.json (900 -> 900 條)
+2025-06-12 00:47:36,610 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20231201-20240101.json
+2025-06-12 00:47:39,784 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20200101-20200401.json -> DATA\processed\cleaned_20200101-20200401.json (1800 -> 1800 條)
+2025-06-12 00:47:39,784 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20240101-20240201.json
+2025-06-12 00:48:21,068 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20221001-20221101.json -> DATA\processed\cleaned_20221001-20221101.json (900 -> 900 條)
+2025-06-12 00:48:21,086 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20240201-20240301.json
+2025-06-12 00:48:23,031 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20221101-20221201.json -> DATA\processed\cleaned_20221101-20221201.json (900 -> 900 條)
+2025-06-12 00:48:23,042 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20240301-20240401.json
+2025-06-12 00:48:23,075 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20230101-20230201.json -> DATA\processed\cleaned_20230101-20230201.json (900 -> 900 條)
+2025-06-12 00:48:23,092 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20240401-20240501.json
+2025-06-12 00:48:23,252 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20221201-20230101.json -> DATA\processed\cleaned_20221201-20230101.json (900 -> 900 條)
+2025-06-12 00:48:23,257 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20240501-20240601.json
+2025-06-12 00:48:23,787 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20230201-20230301.json -> DATA\processed\cleaned_20230201-20230301.json (900 -> 900 條)
+2025-06-12 00:48:23,792 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20240601-20240701.json
+2025-06-12 00:48:25,296 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20230301-20230401.json -> DATA\processed\cleaned_20230301-20230401.json (900 -> 900 條)
+2025-06-12 00:48:25,315 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20240701-20240801.json
+2025-06-12 00:48:26,386 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20230501-20230601.json -> DATA\processed\cleaned_20230501-20230601.json (900 -> 900 條)
+2025-06-12 00:48:26,406 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20240801-20240901.json
+2025-06-12 00:48:27,071 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20230401-20230501.json -> DATA\processed\cleaned_20230401-20230501.json (900 -> 900 條)
+2025-06-12 00:48:27,087 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20240901-20241001.json
+2025-06-12 00:48:27,140 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20230701-20230801.json -> DATA\processed\cleaned_20230701-20230801.json (900 -> 900 條)
+2025-06-12 00:48:27,142 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20241001-20241101.json
+2025-06-12 00:48:27,603 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20230601-20230701.json -> DATA\processed\cleaned_20230601-20230701.json (900 -> 900 條)
+2025-06-12 00:48:27,624 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20241101-20241201.json
+2025-06-12 00:48:29,646 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20230901-20231001.json -> DATA\processed\cleaned_20230901-20231001.json (900 -> 900 條)
+2025-06-12 00:48:29,663 - data_processor.main - INFO - 開始處理檔案: DATA\raw\20241201-20250101.json
+2025-06-12 00:48:29,703 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20230801-20230901.json -> DATA\processed\cleaned_20230801-20230901.json (900 -> 900 條)
+2025-06-12 00:48:30,319 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20231101-20231201.json -> DATA\processed\cleaned_20231101-20231201.json (900 -> 900 條)
+2025-06-12 00:48:32,153 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20231201-20240101.json -> DATA\processed\cleaned_20231201-20240101.json (900 -> 900 條)
+2025-06-12 00:48:32,570 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20240101-20240201.json -> DATA\processed\cleaned_20240101-20240201.json (900 -> 900 條)
+2025-06-12 00:48:32,936 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20231001-20231101.json -> DATA\processed\cleaned_20231001-20231101.json (900 -> 900 條)
+2025-06-12 00:49:00,767 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20240201-20240301.json -> DATA\processed\cleaned_20240201-20240301.json (900 -> 900 條)
+2025-06-12 00:49:02,185 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20240401-20240501.json -> DATA\processed\cleaned_20240401-20240501.json (900 -> 900 條)
+2025-06-12 00:49:02,288 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20240301-20240401.json -> DATA\processed\cleaned_20240301-20240401.json (900 -> 900 條)
+2025-06-12 00:49:04,035 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20240501-20240601.json -> DATA\processed\cleaned_20240501-20240601.json (1000 -> 1000 條)
+2025-06-12 00:49:09,861 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20240701-20240801.json -> DATA\processed\cleaned_20240701-20240801.json (1200 -> 1200 條)
+2025-06-12 00:49:10,458 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20240801-20240901.json -> DATA\processed\cleaned_20240801-20240901.json (1200 -> 1200 條)
+2025-06-12 00:49:10,617 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20241001-20241101.json -> DATA\processed\cleaned_20241001-20241101.json (1200 -> 1200 條)
+2025-06-12 00:49:10,788 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20241101-20241201.json -> DATA\processed\cleaned_20241101-20241201.json (1200 -> 1200 條)
+2025-06-12 00:49:10,951 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20240901-20241001.json -> DATA\processed\cleaned_20240901-20241001.json (1200 -> 1200 條)
+2025-06-12 00:49:11,218 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20241201-20250101.json -> DATA\processed\cleaned_20241201-20250101.json (1200 -> 1200 條)
+2025-06-12 00:49:13,844 - data_processor.main - INFO - 檔案處理完成: DATA\raw\20240601-20240701.json -> DATA\processed\cleaned_20240601-20240701.json (2000 -> 2000 條)
+2025-06-12 00:49:13,855 - data_processor.quality_monitor - INFO - 品質報告已儲存至: DATA\processed\quality_report_20250612_004913.json
+2025-06-12 00:49:13,856 - data_processor.main - INFO - 批次處理完成，共處理 58 個檔案
