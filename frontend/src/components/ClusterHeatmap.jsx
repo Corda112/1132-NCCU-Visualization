@@ -52,20 +52,21 @@ function ClusterHeatmap({ range }) {
             .data(matrix)
             .enter()
             .append('g')
-            .attr('class','row')
-            .attr('transform', d => `translate(0,${clusters.indexOf(clusters[0])*gridHeight})`);
-
-        matrix.forEach((row, i) => {
-            clusters.forEach((c, j) => {
-                g.append('rect')
-                    .attr('x', j * gridWidth)
-                    .attr('y', i * gridHeight)
+            .attr('class', 'row')
+            .attr('transform', (d, i) => `translate(0,${i * gridHeight})`)
+            .each(function (row) {
+                d3.select(this)
+                    .selectAll('rect')
+                    .data(clusters)
+                    .enter()
+                    .append('rect')
+                    .attr('x', (c, j) => j * gridWidth)
                     .attr('width', gridWidth)
                     .attr('height', gridHeight)
-                    .attr('fill', color(row[c]));
-                g.append('title').text(row[c]);
+                    .attr('fill', c => color(row[c]))
+                    .append('title')
+                    .text(c => row[c]);
             });
-        });
 
         svg.append('g').attr('transform',`translate(60,${height-20})`)
             .call(d3.axisBottom(d3.scaleBand().domain(months).range([0, months.length*gridWidth])))
