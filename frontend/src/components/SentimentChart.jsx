@@ -8,7 +8,6 @@ const SentimentChart = ({ range, onTermSelect }) => {
     const [loading, setLoading] = useState(false);
     const [retryCount, setRetryCount] = useState(0);
     const [isProcessing, setIsProcessing] = useState(false); // 點擊處理狀態
-    const [lastClickedPoint, setLastClickedPoint] = useState(null); // 記錄最後點擊點
     const [clickFeedback, setClickFeedback] = useState(null); // 點擊反饋狀態
     const maxRetries = 3;
 
@@ -80,12 +79,12 @@ const SentimentChart = ({ range, onTermSelect }) => {
         }
     };
 
-    // 顯示點擊反饋
+    // 顯示點擊反饋 - 縮短顯示時間
     const showClickFeedback = (message, type = 'info') => {
         setClickFeedback({ message, type });
         setTimeout(() => {
             setClickFeedback(null);
-        }, 2500);
+        }, 1500);  // 從 2500ms 減少到 1500ms
     };
 
     const getOption = () => ({
@@ -95,11 +94,10 @@ const SentimentChart = ({ range, onTermSelect }) => {
                 type: 'line',
                 lineStyle: {
                     color: '#1890ff',
-                    width: 2,
+                    width: 1,
                     type: 'dashed'
                 },
-                animation: true,
-                animationDuration: 300
+                animation: false
             },
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
             borderColor: '#d9d9d9',
@@ -193,9 +191,7 @@ const SentimentChart = ({ range, onTermSelect }) => {
             top: '15%',
             containLabel: true
         },
-        animation: true,
-        animationDuration: 1000,
-        animationEasing: 'cubicOut',
+        animation: false,
         series: [
             {
                 name: 'Positive',
@@ -208,27 +204,19 @@ const SentimentChart = ({ range, onTermSelect }) => {
                 },
                 itemStyle: {
                     color: '#52c41a',
-                    borderWidth: 2,
-                    borderColor: '#fff'
+                    borderWidth: 0
                 },
                 emphasis: {
-                    focus: 'series',
-                    blurScope: 'coordinateSystem',
                     lineStyle: {
-                        width: 4,
-                        shadowBlur: 10,
-                        shadowColor: '#52c41a'
-                    },
-                    itemStyle: {
-                        shadowBlur: 10,
-                        shadowColor: '#52c41a'
+                        width: 4
                     }
                 },
                 triggerEvent: true,
-                symbolSize: 6,
+                symbolSize: 0,
                 showSymbol: false,
-                hoverAnimation: true,
-                zlevel: 2
+                hoverAnimation: false,
+                animation: false,
+                z: 2  // 線條在中層
             },
             {
                 name: 'Negative',
@@ -241,27 +229,19 @@ const SentimentChart = ({ range, onTermSelect }) => {
                 },
                 itemStyle: {
                     color: '#ff4d4f',
-                    borderWidth: 2,
-                    borderColor: '#fff'
+                    borderWidth: 0
                 },
                 emphasis: {
-                    focus: 'series',
-                    blurScope: 'coordinateSystem',
                     lineStyle: {
-                        width: 4,
-                        shadowBlur: 10,
-                        shadowColor: '#ff4d4f'
-                    },
-                    itemStyle: {
-                        shadowBlur: 10,
-                        shadowColor: '#ff4d4f'
+                        width: 4
                     }
                 },
                 triggerEvent: true,
-                symbolSize: 6,
+                symbolSize: 0,
                 showSymbol: false,
-                hoverAnimation: true,
-                zlevel: 2
+                hoverAnimation: false,
+                animation: false,
+                z: 2  // 線條在中層
             },
             {
                 name: 'Neutral',
@@ -274,50 +254,40 @@ const SentimentChart = ({ range, onTermSelect }) => {
                 },
                 itemStyle: {
                     color: '#1890ff',
-                    borderWidth: 2,
-                    borderColor: '#fff'
+                    borderWidth: 0
                 },
                 emphasis: {
-                    focus: 'series',
-                    blurScope: 'coordinateSystem',
                     lineStyle: {
-                        width: 4,
-                        shadowBlur: 10,
-                        shadowColor: '#1890ff'
-                    },
-                    itemStyle: {
-                        shadowBlur: 10,
-                        shadowColor: '#1890ff'
+                        width: 4
                     }
                 },
                 triggerEvent: true,
-                symbolSize: 6,
+                symbolSize: 0,
                 showSymbol: false,
-                hoverAnimation: true,
-                zlevel: 2
+                hoverAnimation: false,
+                animation: false,
+                z: 2  // 線條在中層
             },
-            // 添加透明可點擊區域
+            // 簡化透明可點擊區域
             {
                 name: 'ClickableArea',
                 type: 'bar',
                 data: chartData.map((item) => {
                     const maxValue = Math.max(item.Positive, item.Negative, item.Neutral);
-                    return maxValue + Math.max(10, maxValue * 0.15);
+                    return maxValue + Math.max(5, maxValue * 0.1);
                 }),
-                barWidth: '90%',
+                barWidth: '80%',
                 itemStyle: {
                     color: 'transparent',
                     borderColor: 'transparent'
                 },
                 emphasis: {
                     itemStyle: {
-                        color: 'rgba(24, 144, 255, 0.05)',
-                        borderColor: 'rgba(24, 144, 255, 0.2)',
-                        borderWidth: 1,
-                        borderType: 'dashed'
+                        color: 'rgba(24, 144, 255, 0.03)',
+                        borderColor: 'transparent'
                     }
                 },
-                z: 1,
+                z: 3,  // 確保在最上層捕捉點擊
                 silent: false,
                 triggerEvent: true,
                 tooltip: { show: false },
@@ -327,74 +297,79 @@ const SentimentChart = ({ range, onTermSelect }) => {
         ]
     });
 
-    const onChartClick = async (params) => {
-        console.log('SentimentChart: Chart clicked!', params);
+    const onChartClick = (params) => {
+        console.log('🖱️ SentimentChart: Chart clicked!', params);
+        console.log('🔍 Click details:', {
+            componentType: params.componentType,
+            seriesName: params.seriesName,
+            name: params.name,
+            value: params.value,
+            dataIndex: params.dataIndex
+        });
         
-        if (!onTermSelect || isProcessing) return;
+        if (!onTermSelect) {
+            console.log('❌ onTermSelect not provided');
+            return;
+        }
+        
+        if (isProcessing) {
+            console.log('⏳ Already processing, ignoring click');
+            return;
+        }
         
         // 設置處理狀態
         setIsProcessing(true);
+        console.log('✅ Processing started');
         
         let dateStr = null;
         let sentiment = null;
-        let clickType = '';
         
         if (params.componentType === 'series') {
             dateStr = params.name;
+            console.log('📊 Series clicked:', params.seriesName, 'for date:', dateStr);
             
             if (params.seriesName === 'ClickableArea') {
-                clickType = 'date-area';
                 sentiment = null;
-                showClickFeedback(`正在載入 ${dateStr} 的所有情緒數據...`, 'loading');
+                console.log('🎯 ClickableArea hit - loading all data for date');
+                showClickFeedback(`載入 ${dateStr} 全部數據`, 'loading');
             } else if (['Positive', 'Negative', 'Neutral'].includes(params.seriesName)) {
-                clickType = 'sentiment-line';
                 sentiment = params.seriesName;
                 const sentimentText = sentiment === 'Positive' ? '正面' : sentiment === 'Negative' ? '負面' : '中性';
-                showClickFeedback(`正在載入 ${dateStr} 的${sentimentText}情緒數據...`, 'loading');
+                console.log('📈 Sentiment line clicked:', sentiment);
+                showClickFeedback(`載入${sentimentText}數據`, 'loading');
             }
         } else if (params.componentType === 'xAxis') {
-            clickType = 'x-axis';
             dateStr = params.value;
             sentiment = null;
-            showClickFeedback(`正在載入 ${dateStr} 的所有情緒數據...`, 'loading');
+            console.log('📅 X-axis clicked for date:', dateStr);
+            showClickFeedback(`載入 ${dateStr} 全部數據`, 'loading');
         }
         
         if (dateStr) {
-            // 記錄點擊點用於視覺反饋
-            setLastClickedPoint({ date: dateStr, sentiment, type: clickType });
-            
             const filterData = sentiment ? 
                 { sentiment: sentiment, date: dateStr } : 
                 { date: dateStr };
             
-            console.log('SentimentChart: Sending filter data:', filterData);
+            console.log('📤 Sending filter data:', filterData);
             
-            try {
-                // 模擬處理時間確保用戶能看到反饋
-                await new Promise(resolve => setTimeout(resolve, 200));
-                
-                onTermSelect(filterData);
-                
-                // 成功反饋
-                const successMessage = sentiment ? 
-                    `已載入 ${dateStr} 的${sentiment === 'Positive' ? '正面' : sentiment === 'Negative' ? '負面' : '中性'}情緒數據` :
-                    `已載入 ${dateStr} 的所有情緒數據`;
-                showClickFeedback(successMessage, 'success');
-                
-            } catch (error) {
-                console.error('SentimentChart: Error processing click:', error);
-                showClickFeedback('載入失敗，請重試', 'error');
-            }
+            // 立即執行，無延遲
+            onTermSelect(filterData);
+            
+            // 簡化的成功反饋
+            setTimeout(() => {
+                showClickFeedback('✓ 已載入', 'success');
+                console.log('✅ Success feedback shown');
+            }, 100);
         } else {
-            console.log('SentimentChart: Unable to determine date from click event');
-            showClickFeedback('點擊位置無效，請點擊圖表線條或日期', 'warning');
+            console.log('⚠️ No valid date found in click event');
+            showClickFeedback('請點擊線條或日期', 'warning');
         }
         
-        // 重置處理狀態
+        // 快速重置處理狀態
         setTimeout(() => {
             setIsProcessing(false);
-            setLastClickedPoint(null);
-        }, 1000);
+            console.log('🔄 Processing reset');
+        }, 300);
     };
 
     if (loading) {
