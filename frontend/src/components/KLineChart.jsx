@@ -1,42 +1,62 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
+import { getApiUrl, API_ENDPOINTS, handleApiError } from '../config/api';
 
 function KLineChart({ onRangeChange }) {
     const d3Container = useRef(null);
     const [data, setData] = useState([]);
     const [range, setRange] = useState([0, 0]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        axios.get('http://localhost:3001/api/kline').then(res => {
-            const d = res.data.map(row => ({
-                ...row,
-                date: new Date(row.timestamp || row.date || row.Date),
-                open: +row.Open,
-                high: +row.High,
-                low: +row.Low,
-                close: +row.Close,
-                volume: +row.Volume
-            })).sort((a, b) => a.date - b.date);
-            setData(d);
+        const fetchData = async () => {
+            setLoading(true);
+            setError(null);
+            
+            try {
+                const response = await axios.get(getApiUrl(API_ENDPOINTS.KLINE), {
+                    timeout: 10000
+                });
+                
+                const d = response.data.map(row => ({
+                    ...row,
+                    date: new Date(row.timestamp || row.date || row.Date),
+                    open: +row.Open,
+                    high: +row.High,
+                    low: +row.Low,
+                    close: +row.Close,
+                    volume: +row.Volume
+                })).sort((a, b) => a.date - b.date);
+                
+                setData(d);
 
-            if (d.length > 0) {
-                const fullRangeIndices = [0, d.length - 1];
-                setRange(fullRangeIndices);
+                if (d.length > 0) {
+                    const fullRangeIndices = [0, d.length - 1];
+                    setRange(fullRangeIndices);
 
-                if (onRangeChange) {
-                    const fullRangeTime = {
-                        from: d[fullRangeIndices[0]].date.getTime(),
-                        to: d[fullRangeIndices[1]].date.getTime()
-                    };
-                    onRangeChange(fullRangeTime);
+                    if (onRangeChange) {
+                        const fullRangeTime = {
+                            from: d[fullRangeIndices[0]].date.getTime(),
+                            to: d[fullRangeIndices[1]].date.getTime()
+                        };
+                        onRangeChange(fullRangeTime);
+                    }
                 }
+            } catch (error) {
+                const errorInfo = handleApiError(error);
+                setError(errorInfo);
+                console.error('Error fetching K-line data:', error);
             }
-        });
+            setLoading(false);
+        };
+        
+        fetchData();
     }, [onRangeChange]);
 
     useEffect(() => {
-        if (!data.length) return;
+        if (!data.length || error) return;
         const width = d3Container.current.clientWidth;
         const height = d3Container.current.clientHeight;
         const margin = { top: 20, right: 20, bottom: 80, left: 60 };
@@ -197,6 +217,25 @@ function KLineChart({ onRangeChange }) {
             .attr('stroke-width', 3)
             .attr('opacity', 0.5);
     }, [data, range, onRangeChange]);
+
+    if (loading) {
+        return (
+            <div style={{ width: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="loading-pane">載入K線資料中...</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div style={{ width: '100%', height: '500px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div className="error-pane">
+                    <p>載入K線資料失敗: {error.message}</p>
+                    <button onClick={() => window.location.reload()}>重新載入</button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div style={{ width: '100%', height: '100%', background: 'none' }}>

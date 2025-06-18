@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import axios from 'axios';
+import { getApiUrl, API_ENDPOINTS, handleApiError } from '../config/api';
 
 // Component colors based on user's reference image (不確定性圖.jpg)
 const componentColors = {
@@ -27,319 +28,392 @@ const ciFillColor99 = d3.interpolateRgb(baseMatlabCIBlue, "white")(0.5).toString
 const ciFillColor50 = d3.interpolateRgb(baseMatlabCIBlue, "white")(0.25).toString(); // Corresponds to MATLAB's col(2,:), 25% mix with white
 const ciFillOpacity = 0.5; // General opacity for CIs, similar to MATLAB's FaceAlpha
 
-function UASTLChart({ range }) {
+const UASTLChart = ({ range }) => {
+    const [data, setData] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const svgRef = useRef();
 
     useEffect(() => {
-        if (!svgRef.current || !svgRef.current.parentNode) return;
-
-        axios.get('http://localhost:3001/api/uastl').then(res => {
-            let rawData = res.data;
-            if (!Array.isArray(rawData) || rawData.length === 0) {
-                console.error("No data or invalid data format received from API.");
-                // Display error message in SVG
-                const tempSvg = d3.select(svgRef.current);
-                tempSvg.selectAll("*").remove();
-                tempSvg.append("text")
-                    .attr("x", tempSvg.attr("width") / 2 || 200)
-                    .attr("y", tempSvg.attr("height") / 2 || 100)
-                    .attr("text-anchor", "middle")
-                    .text("No data available to display.");
-                return;
+        const fetchData = async () => {
+            setLoading(true);
+            setError(null);
+            
+            try {
+                console.log('UASTLChart: Fetching data from API...');
+                const response = await axios.get(getApiUrl(API_ENDPOINTS.UASTL), {
+                    timeout: 10000
+                });
+                
+                console.log('UASTLChart: API response received:', response.data.length, 'items');
+                console.log('UASTLChart: First data item:', response.data[0]);
+                
+                if (!response.data || response.data.length === 0) {
+                    console.error("No data or invalid data format received from API.");
+                    setError({ message: "未收到有效的UASTL資料" });
+                    return;
+                }
+                
+                setData(response.data);
+                console.log('UASTLChart: Data set successfully');
+            } catch (error) {
+                const errorInfo = handleApiError(error);
+                setError(errorInfo);
+                console.error("Error fetching or processing UASTL data:", error);
             }
+            setLoading(false);
+        };
 
-            const dataWithDates = rawData.map(d => ({ ...d, dateObj: new Date(d.date) }));
-            let displayData = dataWithDates;
+        fetchData();
+    }, []);
 
-            if (range && range.from && range.to) {
-                displayData = dataWithDates.filter(d => {
-                    const time = d.dateObj.getTime();
-                    return time >= range.from && time <= range.to;
+    useEffect(() => {
+        console.log('UASTLChart: Render effect triggered');
+        console.log('UASTLChart: data.length =', data.length);
+        console.log('UASTLChart: error =', error);
+        console.log('UASTLChart: range =', range);
+        
+        if (!data.length || error) {
+            console.log('UASTLChart: Exiting render - no data or error');
+            return;
+        }
+
+        if (!svgRef.current || !svgRef.current.parentNode) {
+            console.log('UASTLChart: Exiting render - no SVG ref or parent');
+            return;
+        }
+
+        console.log('UASTLChart: Starting data processing...');
+        
+        let displayData = data;
+
+        if (range && range.from && range.to) {
+            console.log('UASTLChart: Filtering data by range:', range);
+            displayData = data.filter(d => {
+                const time = new Date(d.date).getTime();
+                return time >= range.from && time <= range.to;
+            });
+            console.log('UASTLChart: Filtered data length:', displayData.length);
+        } else {
+            console.log('UASTLChart: Using all data, no range filter');
+        }
+
+        if (displayData.length === 0) {
+            console.log('UASTLChart: No display data after filtering');
+            return;
+        }
+
+        const parentNode = svgRef.current.parentNode;
+        const containerWidth = parentNode.clientWidth;
+        const containerHeight = parentNode.clientHeight;
+        
+        console.log('UASTLChart: Container dimensions:', containerWidth, 'x', containerHeight);
+
+        if (containerWidth === 0 || containerHeight === 0) {
+            console.log('UASTLChart: Container has zero dimensions');
+            return;
+        }
+
+        d3.select(svgRef.current).selectAll("*").remove();
+        const svg = d3.select(svgRef.current)
+            .attr("width", containerWidth)
+            .attr("height", containerHeight);
+
+        const firstDataPoint = displayData[0];
+        console.log('UASTLChart: First data point:', firstDataPoint);
+        
+        const coPoint = firstDataPoint.coPoint_used ? +firstDataPoint.coPoint_used - 1 : null;
+        const p_used_str = firstDataPoint.p_used || "7,90,365";
+        const p_used = p_used_str.split(',').map(Number);
+        const numSamples = firstDataPoint.num_samples_added || 3;
+
+        console.log('UASTLChart: Processing parameters:', { coPoint, p_used, numSamples });
+
+        const seasonalKeyBase = 'seasonal';
+        let componentDefinitions = [
+            { key: 'input', name: 'Input Data', dataKey: 'input', pValue: null },
+            { key: 'trend', name: 'Trend Component', dataKey: 'trend', pValue: null },
+        ];
+        for (let i = 0; i < p_used.length; i++) {
+            const sNum = i + 1;
+            if (firstDataPoint.hasOwnProperty(`${seasonalKeyBase}${sNum}_mean`)) {
+                componentDefinitions.push({
+                    key: `${seasonalKeyBase}${sNum}`,
+                    name: `Seasonal Component ${sNum} (p=${p_used[i]})`,
+                    dataKey: `${seasonalKeyBase}${sNum}`,
+                    pValue: p_used[i]
                 });
             }
+        }
+        componentDefinitions.push({ key: 'residual', name: 'Residual Component', dataKey: 'residual', pValue: null });
 
-            if (displayData.length === 0) return;
+        console.log('UASTLChart: Component definitions:', componentDefinitions);
 
-            const parentNode = svgRef.current.parentNode;
-            const containerWidth = parentNode.clientWidth;
-            const containerHeight = parentNode.clientHeight;
+        const processedComponents = componentDefinitions.map(compDef => {
+            return {
+                ...compDef,
+                plotData: displayData.map(d => {
+                    const item = {
+                        dateObj: new Date(d.date),
+                        mean: +d[`${compDef.dataKey}_mean`],
+                        std: +d[`${compDef.dataKey}_std`],
+                        corr: +d[`corr_${compDef.dataKey}`]
+                    };
+                    for (let s = 1; s <= numSamples; s++) {
+                        item[`sample${s}`] = +d[`sample${s}_${compDef.dataKey}`];
+                    }
+                    return item;
+                })
+            };
+        });
 
-            d3.select(svgRef.current).selectAll("*").remove();
-            const svg = d3.select(svgRef.current)
-                .attr("width", containerWidth)
-                .attr("height", containerHeight);
+        console.log('UASTLChart: Processed components:', processedComponents.length);
+        console.log('UASTLChart: First component plot data sample:', processedComponents[0]?.plotData[0]);
 
-            const firstDataPoint = displayData[0];
-            const coPoint = firstDataPoint.coPoint_used ? +firstDataPoint.coPoint_used - 1 : null;
-            const p_used_str = firstDataPoint.p_used || "7,90,365";
-            const p_used = p_used_str.split(',').map(Number);
-            const numSamples = firstDataPoint.num_samples_added || 3;
+        const margin = { top: 50, right: 30, bottom: 60, left: 60 };
+        const numComponents = processedComponents.length;
+        const totalSubplotVerticalSpace = containerHeight - margin.top - margin.bottom;
+        const subplotSpacing = 25;
+        const correlationStripHeight = 25;
 
-            const seasonalKeyBase = 'seasonal';
-            let componentDefinitions = [
-                { key: 'input', name: 'Input Data', dataKey: 'input', pValue: null },
-                { key: 'trend', name: 'Trend Component', dataKey: 'trend', pValue: null },
-            ];
-            for (let i = 0; i < p_used.length; i++) {
-                const sNum = i + 1;
-                if (firstDataPoint.hasOwnProperty(`${seasonalKeyBase}${sNum}_mean`)) {
-                    componentDefinitions.push({
-                        key: `${seasonalKeyBase}${sNum}`,
-                        name: `Seasonal Component ${sNum} (p=${p_used[i]})`,
-                        dataKey: `${seasonalKeyBase}${sNum}`,
-                        pValue: p_used[i]
-                    });
+        const singleSubplotAllocatedHeight = (totalSubplotVerticalSpace / numComponents) - subplotSpacing;
+        const drawableSubplotHeight = singleSubplotAllocatedHeight - correlationStripHeight;
+
+        console.log('UASTLChart: Layout calculations:', {
+            totalSubplotVerticalSpace,
+            numComponents,
+            singleSubplotAllocatedHeight,
+            drawableSubplotHeight
+        });
+
+        // 檢查日期範圍
+        const dateExtent = d3.extent(displayData, d => new Date(d.date));
+        console.log('UASTLChart: Date extent:', dateExtent);
+
+        const xScale = d3.scaleTime()
+            .domain(dateExtent)
+            .range([margin.left, containerWidth - margin.right]);
+
+        console.log('UASTLChart: xScale domain:', xScale.domain());
+        console.log('UASTLChart: xScale range:', xScale.range());
+
+        const coolWarmColorScale = d3.scaleSequential(d3.interpolateRdBu).domain([1, -1]);
+
+        svg.append("text")
+            .attr("x", containerWidth / 2)
+            .attr("y", margin.top / 2.5)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("font-weight", "bold")
+            .text("Uncertainty-Aware Seasonal-Trend Decomposition");
+
+        processedComponents.forEach((component, i) => {
+            const subplotGroupYOffset = margin.top + i * (singleSubplotAllocatedHeight + subplotSpacing);
+            const mainPlotAreaY = subplotGroupYOffset;
+            const corrAreaY = mainPlotAreaY + drawableSubplotHeight + 5; // 5px gap
+
+            const allYValues = [];
+            component.plotData.forEach(d => {
+                if (!isNaN(d.mean) && !isNaN(d.std)) {
+                    allYValues.push(d.mean - sigmaLevels['99%'] * d.std);
+                    allYValues.push(d.mean + sigmaLevels['99%'] * d.std);
+                } else if (!isNaN(d.mean)) {
+                    allYValues.push(d.mean);
                 }
-            }
-            componentDefinitions.push({ key: 'residual', name: 'Residual Component', dataKey: 'residual', pValue: null });
-
-            const processedComponents = componentDefinitions.map(compDef => {
-                return {
-                    ...compDef,
-                    plotData: displayData.map(d => {
-                        const item = {
-                            dateObj: d.dateObj,
-                            mean: +d[`${compDef.dataKey}_mean`],
-                            std: +d[`${compDef.dataKey}_std`],
-                            corr: +d[`corr_${compDef.dataKey}`]
-                        };
-                        for (let s = 1; s <= numSamples; s++) {
-                            item[`sample${s}`] = +d[`sample${s}_${compDef.dataKey}`];
-                        }
-                        return item;
-                    })
-                };
+                for (let s = 1; s <= numSamples; s++) {
+                    if (!isNaN(d[`sample${s}`])) allYValues.push(d[`sample${s}`]);
+                }
             });
 
-            const margin = { top: 50, right: 30, bottom: 60, left: 60 };
-            const numComponents = processedComponents.length;
-            const totalSubplotVerticalSpace = containerHeight - margin.top - margin.bottom;
-            const subplotSpacing = 25;
-            const correlationStripHeight = 25;
+            let yMin = d3.min(allYValues);
+            let yMax = d3.max(allYValues);
 
-            const singleSubplotAllocatedHeight = (totalSubplotVerticalSpace / numComponents) - subplotSpacing;
-            const drawableSubplotHeight = singleSubplotAllocatedHeight - correlationStripHeight;
+            if (allYValues.length === 0 || yMin === yMax) {
+                yMin = (yMin === undefined) ? -1 : yMin - 0.5;
+                yMax = (yMax === undefined) ? 1 : yMax + 0.5;
+            }
+            const yPadding = (yMax - yMin) * 0.1 || 0.1;
+            yMin -= yPadding;
+            yMax += yPadding;
 
-            const xScale = d3.scaleTime()
-                .domain(d3.extent(displayData, d => d.dateObj))
-                .range([margin.left, containerWidth - margin.right]);
+            const yScale = d3.scaleLinear()
+                .domain([yMin, yMax])
+                .range([mainPlotAreaY + drawableSubplotHeight, mainPlotAreaY]);
 
-            const coolWarmColorScale = d3.scaleSequential(d3.interpolateRdBu).domain([1, -1]);
+            const subPlotGroup = svg.append("g").attr("class", `subplot-${component.key}`);
 
-            svg.append("text")
-                .attr("x", containerWidth / 2)
-                .attr("y", margin.top / 2.5)
-                .attr("text-anchor", "middle")
-                .style("font-size", "16px")
-                .style("font-weight", "bold")
-                .text("Uncertainty-Aware Seasonal-Trend Decomposition");
+            subPlotGroup.append("rect")
+                .attr("x", margin.left)
+                .attr("y", mainPlotAreaY)
+                .attr("width", containerWidth - margin.left - margin.right)
+                .attr("height", drawableSubplotHeight)
+                .attr("fill", "#f9f9f9")
+                .attr("stroke", "#e0e0e0");
 
-            processedComponents.forEach((component, i) => {
-                const subplotGroupYOffset = margin.top + i * (singleSubplotAllocatedHeight + subplotSpacing);
-                const mainPlotAreaY = subplotGroupYOffset;
-                const corrAreaY = mainPlotAreaY + drawableSubplotHeight + 5; // 5px gap
+            const area99 = d3.area()
+                .x(d => xScale(d.dateObj))
+                .y0(d => yScale(d.mean - sigmaLevels['99%'] * d.std))
+                .y1(d => yScale(d.mean + sigmaLevels['99%'] * d.std))
+                .defined(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0);
 
-                const allYValues = [];
-                component.plotData.forEach(d => {
-                    if (!isNaN(d.mean) && !isNaN(d.std)) {
-                        allYValues.push(d.mean - sigmaLevels['99%'] * d.std);
-                        allYValues.push(d.mean + sigmaLevels['99%'] * d.std);
-                    } else if (!isNaN(d.mean)) {
-                        allYValues.push(d.mean);
-                    }
-                    for (let s = 1; s <= numSamples; s++) {
-                        if (!isNaN(d[`sample${s}`])) allYValues.push(d[`sample${s}`]);
-                    }
-                });
+            subPlotGroup.append("path")
+                .datum(component.plotData)
+                .attr("fill", ciFillColor99)
+                .attr("opacity", ciFillOpacity)
+                .attr("d", area99);
 
-                let yMin = d3.min(allYValues);
-                let yMax = d3.max(allYValues);
+            const area50 = d3.area()
+                .x(d => xScale(d.dateObj))
+                .y0(d => yScale(d.mean - sigmaLevels['50%'] * d.std))
+                .y1(d => yScale(d.mean + sigmaLevels['50%'] * d.std))
+                .defined(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0);
 
-                if (allYValues.length === 0 || yMin === yMax) {
-                    yMin = (yMin === undefined) ? -1 : yMin - 0.5;
-                    yMax = (yMax === undefined) ? 1 : yMax + 0.5;
-                }
-                const yPadding = (yMax - yMin) * 0.1 || 0.1;
-                yMin -= yPadding;
-                yMax += yPadding;
+            subPlotGroup.append("path")
+                .datum(component.plotData)
+                .attr("fill", ciFillColor50)
+                .attr("opacity", ciFillOpacity)
+                .attr("d", area50);
 
-                const yScale = d3.scaleLinear()
-                    .domain([yMin, yMax])
-                    .range([mainPlotAreaY + drawableSubplotHeight, mainPlotAreaY]);
-
-                const subPlotGroup = svg.append("g").attr("class", `subplot-${component.key}`);
-
-                subPlotGroup.append("rect")
-                    .attr("x", margin.left)
-                    .attr("y", mainPlotAreaY)
-                    .attr("width", containerWidth - margin.left - margin.right)
-                    .attr("height", drawableSubplotHeight)
-                    .attr("fill", "#f9f9f9")
-                    .attr("stroke", "#e0e0e0");
-
-                const area99 = d3.area()
+            for (let s = 1; s <= numSamples; s++) {
+                const sampleKey = `sample${s}`;
+                const line = d3.line()
                     .x(d => xScale(d.dateObj))
-                    .y0(d => yScale(d.mean - sigmaLevels['99%'] * d.std))
-                    .y1(d => yScale(d.mean + sigmaLevels['99%'] * d.std))
-                    .defined(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0);
-
-                subPlotGroup.append("path")
-                    .datum(component.plotData)
-                    .attr("fill", ciFillColor99)
-                    .attr("opacity", ciFillOpacity)
-                    .attr("d", area99);
-
-                const area50 = d3.area()
-                    .x(d => xScale(d.dateObj))
-                    .y0(d => yScale(d.mean - sigmaLevels['50%'] * d.std))
-                    .y1(d => yScale(d.mean + sigmaLevels['50%'] * d.std))
-                    .defined(d => !isNaN(d.mean) && !isNaN(d.std) && d.std > 0);
-
-                subPlotGroup.append("path")
-                    .datum(component.plotData)
-                    .attr("fill", ciFillColor50)
-                    .attr("opacity", ciFillOpacity)
-                    .attr("d", area50);
-
-                for (let s = 1; s <= numSamples; s++) {
-                    const sampleKey = `sample${s}`;
-                    const line = d3.line()
-                        .x(d => xScale(d.dateObj))
-                        .y(d => yScale(d[sampleKey]))
-                        .defined(d => !isNaN(d[sampleKey]));
-
-                    subPlotGroup.append("path")
-                        .datum(component.plotData)
-                        .attr("fill", "none")
-                        .attr("stroke", sampleLineColors[(s - 1) % sampleLineColors.length])
-                        .attr("stroke-width", 1)
-                        .attr("opacity", 0.7)
-                        .attr("d", line);
-                }
-
-                const meanLine = d3.line()
-                    .x(d => xScale(d.dateObj))
-                    .y(d => yScale(d.mean))
-                    .defined(d => !isNaN(d.mean));
+                    .y(d => yScale(d[sampleKey]))
+                    .defined(d => !isNaN(d[sampleKey]));
 
                 subPlotGroup.append("path")
                     .datum(component.plotData)
                     .attr("fill", "none")
-                    .attr("stroke", componentColors['residual'])
-                    .attr("stroke-width", 1.5)
-                    .attr("opacity", 0.95)
-                    .attr("d", meanLine);
-
-                subPlotGroup.append("g")
-                    .attr("transform", `translate(${margin.left},0)`)
-                    .call(d3.axisLeft(yScale).ticks(4).tickSizeOuter(0))
-                    .selectAll("text").style("font-size", "9px");
-
-                const maxAbsCorrForComponent = d3.max(component.plotData, d => Math.abs(d.corr)) || 1;
-                component.plotData.forEach((d, idx) => {
-                    if (isNaN(d.corr)) return;
-
-                    const barX = xScale(d.dateObj);
-                    let barWidth = 2; // Default width
-                    if (idx < displayData.length - 1) {
-                        barWidth = xScale(displayData[idx + 1].dateObj) - barX;
-                    } else if (idx > 0) {
-                        barWidth = barX - xScale(displayData[idx - 1].dateObj);
-                    }
-
-                    const barHeightRatio = Math.abs(d.corr) / maxAbsCorrForComponent;
-                    const visualBarHeight = barHeightRatio * (correlationStripHeight / 2);
-
-                    let rectY;
-                    if (d.corr >= 0) {
-                        rectY = corrAreaY + (correlationStripHeight / 2) - visualBarHeight;
-                    } else {
-                        rectY = corrAreaY + (correlationStripHeight / 2);
-                    }
-
-                    subPlotGroup.append("rect")
-                        .attr("x", barX - barWidth / 2 + 0.5)
-                        .attr("y", rectY)
-                        .attr("width", Math.max(1, barWidth - 1))
-                        .attr("height", Math.max(0.5, visualBarHeight))
-                        .attr("fill", d3.rgb(coolWarmColorScale(d.corr)).darker(0.2).toString())
-                        .attr("stroke", "none");
-                });
-
-                if (i === numComponents - 1) {
-                    const lastSubplotXAxisLineY = containerHeight - margin.bottom;
-                    svg.append("g")
-                        .attr("transform", `translate(0,${lastSubplotXAxisLineY})`)
-                        .call(d3.axisBottom(xScale).ticks(5).tickFormat(d3.timeFormat("%Y-%m-%d")))
-                        .selectAll("text").style("font-size", "9px")
-                        .attr("transform", "rotate(-45)")
-                        .style("text-anchor", "end");
-
-                    svg.append("text")
-                        .attr("x", containerWidth / 2)
-                        .attr("y", containerHeight - 10)
-                        .attr("text-anchor", "middle")
-                        .style("font-size", "11px")
-                        .text("Date");
-                }
-
-                subPlotGroup.append("text")
-                    .attr("x", containerWidth / 2)
-                    .attr("y", mainPlotAreaY - 7)
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "11px")
-                    .style("font-weight", "600")
-                    .style("fill", componentColors[component.key] || "black")
-                    .text(component.name);
-
-                if (component.key !== 'input' && yMin <= 0 && yMax >= 0) {
-                    subPlotGroup.append("line")
-                        .attr("x1", margin.left)
-                        .attr("x2", containerWidth - margin.right)
-                        .attr("y1", yScale(0))
-                        .attr("y2", yScale(0))
-                        .attr("stroke", "grey")
-                        .attr("stroke-width", 0.7)
-                        .attr("stroke-dasharray", "3,3");
-                }
-
-                if (coPoint !== null && coPoint >= 0 && coPoint < displayData.length) {
-                    const coPointX = xScale(displayData[coPoint].dateObj);
-                    if (coPointX >= margin.left && coPointX <= containerWidth - margin.right) {
-                        subPlotGroup.append("line")
-                            .attr("x1", coPointX)
-                            .attr("x2", coPointX)
-                            .attr("y1", mainPlotAreaY)
-                            .attr("y2", corrAreaY + correlationStripHeight)
-                            .attr("stroke", "black")
-                            .attr("stroke-width", 1.2);
-                    }
-                }
-            });
-
-        }).catch(error => {
-            console.error("Error fetching or processing UASTL data:", error);
-            const tempSvg = d3.select(svgRef.current);
-            tempSvg.selectAll("*").remove();
-
-            // Safely get container dimensions or use defaults
-            let CWidth = 200; // Default width
-            let CHeight = 100; // Default height
-            if (svgRef.current && svgRef.current.parentNode) {
-                const parentNode = svgRef.current.parentNode;
-                CWidth = parentNode.clientWidth || CWidth;
-                CHeight = parentNode.clientHeight || CHeight;
+                    .attr("stroke", sampleLineColors[(s - 1) % sampleLineColors.length])
+                    .attr("stroke-width", 1)
+                    .attr("opacity", 0.7)
+                    .attr("d", line);
             }
 
-            tempSvg.append("text")
-                .attr("x", CWidth / 2)
-                .attr("y", CHeight / 2)
-                .attr("text-anchor", "middle")
-                .style("font-size", "12px")
-                .text("Error loading data. Please check console for details.");
-        });
+            const meanLine = d3.line()
+                .x(d => xScale(d.dateObj))
+                .y(d => yScale(d.mean))
+                .defined(d => !isNaN(d.mean));
 
-    }, [range]);
+            subPlotGroup.append("path")
+                .datum(component.plotData)
+                .attr("fill", "none")
+                .attr("stroke", componentColors['residual'])
+                .attr("stroke-width", 1.5)
+                .attr("opacity", 0.95)
+                .attr("d", meanLine);
+
+            subPlotGroup.append("g")
+                .attr("transform", `translate(${margin.left},0)`)
+                .call(d3.axisLeft(yScale).ticks(4).tickSizeOuter(0))
+                .selectAll("text").style("font-size", "9px");
+
+            const maxAbsCorrForComponent = d3.max(component.plotData, d => Math.abs(d.corr)) || 1;
+            component.plotData.forEach((d, idx) => {
+                if (isNaN(d.corr)) return;
+
+                const barX = xScale(d.dateObj);
+                let barWidth = 2; // Default width
+                if (idx < displayData.length - 1) {
+                    barWidth = xScale(displayData[idx + 1].dateObj) - barX;
+                } else if (idx > 0) {
+                    barWidth = barX - xScale(displayData[idx - 1].dateObj);
+                }
+
+                // 容錯：若座標或寬度無效，跳過此資料點
+                if (!isFinite(barX) || !isFinite(barWidth)) {
+                    return; // skip this iteration to avoid NaN errors
+                }
+
+                const barHeightRatio = Math.abs(d.corr) / maxAbsCorrForComponent;
+                const visualBarHeight = barHeightRatio * (correlationStripHeight / 2);
+
+                let rectY;
+                if (d.corr >= 0) {
+                    rectY = corrAreaY + (correlationStripHeight / 2) - visualBarHeight;
+                } else {
+                    rectY = corrAreaY + (correlationStripHeight / 2);
+                }
+
+                subPlotGroup.append("rect")
+                    .attr("x", barX - barWidth / 2 + 0.5)
+                    .attr("y", rectY)
+                    .attr("width", Math.max(1, barWidth - 1))
+                    .attr("height", Math.max(0.5, visualBarHeight))
+                    .attr("fill", d3.rgb(coolWarmColorScale(d.corr)).darker(0.2).toString())
+                    .attr("stroke", "none");
+            });
+
+            if (i === numComponents - 1) {
+                const lastSubplotXAxisLineY = containerHeight - margin.bottom;
+                svg.append("g")
+                    .attr("transform", `translate(0,${lastSubplotXAxisLineY})`)
+                    .call(d3.axisBottom(xScale).ticks(5).tickFormat(d3.timeFormat("%Y-%m-%d")))
+                    .selectAll("text").style("font-size", "9px")
+                    .attr("transform", "rotate(-45)")
+                    .style("text-anchor", "end");
+
+                svg.append("text")
+                    .attr("x", containerWidth / 2)
+                    .attr("y", containerHeight - 10)
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "11px")
+                    .text("Date");
+            }
+
+            subPlotGroup.append("text")
+                .attr("x", containerWidth / 2)
+                .attr("y", mainPlotAreaY - 7)
+                .attr("text-anchor", "middle")
+                .style("font-size", "11px")
+                .style("font-weight", "600")
+                .style("fill", componentColors[component.key] || "black")
+                .text(component.name);
+
+            if (component.key !== 'input' && yMin <= 0 && yMax >= 0) {
+                subPlotGroup.append("line")
+                    .attr("x1", margin.left)
+                    .attr("x2", containerWidth - margin.right)
+                    .attr("y1", yScale(0))
+                    .attr("y2", yScale(0))
+                    .attr("stroke", "grey")
+                    .attr("stroke-width", 0.7)
+                    .attr("stroke-dasharray", "3,3");
+            }
+
+            if (coPoint !== null && coPoint >= 0 && coPoint < displayData.length) {
+                const coPointX = xScale(displayData[coPoint].dateObj);
+                if (coPointX >= margin.left && coPointX <= containerWidth - margin.right) {
+                    subPlotGroup.append("line")
+                        .attr("x1", coPointX)
+                        .attr("x2", coPointX)
+                        .attr("y1", mainPlotAreaY)
+                        .attr("y2", corrAreaY + correlationStripHeight)
+                        .attr("stroke", "black")
+                        .attr("stroke-width", 1.2);
+                }
+            }
+        });
+    }, [data, range, error]);
+
+    if (loading) {
+        return (
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff' }}>
+                <div className="loading-pane">載入UASTL資料中...</div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#fff' }}>
+                <div className="error-pane">
+                    <p>載入UASTL資料失敗: {error.message}</p>
+                    <button onClick={() => window.location.reload()}>重新載入</button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div style={{ width: '100%', height: '100%', overflow: 'hidden', background: '#fff' }}>

@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
+import { getApiUrl, API_ENDPOINTS, handleApiError } from '../config/api';
 
 const FrequencyChart = ({ range, type, onTermSelect }) => {
     const [chartData, setChartData] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             if (!range || !range.from || !range.to) return;
+            
+            setLoading(true);
+            setError(null);
+            
             try {
                 const startDate = new Date(range.from).toISOString().split('T')[0];
                 const endDate = new Date(range.to).toISOString().split('T')[0];
-                const response = await axios.get('http://localhost:3001/api/term-ngram', {
-                    params: { startDate, endDate }
+                const response = await axios.get(getApiUrl(API_ENDPOINTS.TERM_NGRAM), {
+                    params: { startDate, endDate },
+                    timeout: 10000
                 });
 
                 // Filter and process data based on type (term or ngram)
@@ -53,8 +61,11 @@ const FrequencyChart = ({ range, type, onTermSelect }) => {
                 });
 
             } catch (error) {
+                const errorInfo = handleApiError(error);
+                setError(errorInfo);
                 console.error(`Error fetching ${type} data:`, error);
             }
+            setLoading(false);
         };
 
         fetchData();
@@ -62,7 +73,12 @@ const FrequencyChart = ({ range, type, onTermSelect }) => {
 
     const getOption = () => ({
         tooltip: {
-            trigger: 'axis'
+            trigger: 'axis',
+            formatter: function(params) {
+                return `${params[0].axisValue}<br/>${params.map(p => 
+                    `${p.marker}${p.seriesName}: ${p.value}`
+                ).join('<br/>')}`;
+            }
         },
         legend: {
             data: chartData.top10terms,
@@ -78,14 +94,34 @@ const FrequencyChart = ({ range, type, onTermSelect }) => {
         yAxis: {
             type: 'value'
         },
-        series: chartData.series
+        series: chartData.series?.map(s => ({
+            ...s,
+            smooth: true,
+            lineStyle: { width: 2 }
+        })) || []
     });
 
     const onChartClick = (params) => {
+        console.log('FrequencyChart: Chart clicked!', params);
         if (onTermSelect) {
-            onTermSelect(params.seriesName, params.name); // params.name is the date on xAxis
+            const term = params.seriesName;
+            const date = params.name;
+            console.log('FrequencyChart: Sending term and date:', { term, date });
+            onTermSelect(term, date); // params.name is the date on xAxis
         }
     };
+
+    if (loading) {
+        return <div className="loading-pane">載入{type === 'ngram' ? 'N-gram' : '詞頻'}資料中...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className="error-pane">
+                <p>載入{type === 'ngram' ? 'N-gram' : '詞頻'}資料失敗: {error.message}</p>
+            </div>
+        );
+    }
 
     return <ReactECharts option={getOption()} style={{ height: '300px', width: '100%' }} onEvents={{ 'click': onChartClick }} />;
 };

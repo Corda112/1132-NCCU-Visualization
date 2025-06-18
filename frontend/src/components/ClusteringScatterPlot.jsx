@@ -1,23 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
+import { getApiUrl, API_ENDPOINTS, handleApiError } from '../config/api';
 
-const ClusteringScatterPlot = ({ range }) => {
+const ClusteringScatterPlot = ({ range, onTermSelect }) => {
     const [chartData, setChartData] = useState([]);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             if (!range || !range.from || !range.to) return;
+            
+            setLoading(true);
+            setError(null);
+            
             try {
                 const startDate = new Date(range.from).toISOString().split('T')[0];
                 const endDate = new Date(range.to).toISOString().split('T')[0];
-                const response = await axios.get('http://localhost:3001/api/clusters', {
-                    params: { startDate, endDate }
+                const response = await axios.get(getApiUrl(API_ENDPOINTS.CLUSTERS), {
+                    params: { startDate, endDate },
+                    timeout: 10000
                 });
                 setChartData(response.data);
             } catch (error) {
+                const errorInfo = handleApiError(error);
+                setError(errorInfo);
                 console.error('Error fetching clustering data:', error);
             }
+            setLoading(false);
         };
 
         fetchData();
@@ -62,7 +73,31 @@ const ClusteringScatterPlot = ({ range }) => {
         };
     };
 
-    return <ReactECharts option={getOption()} style={{ height: '300px', width: '100%' }} />;
+    const onChartClick = (params) => {
+        console.log('ClusteringScatterPlot: Chart clicked!', params);
+        if (onTermSelect && params.data && params.data[2]) {
+            // 使用文章內容的前幾個單詞作為搜索詞
+            const text = params.data[2];
+            const searchTerm = text.split(' ').slice(0, 3).join(' ');
+            const filterData = { term: searchTerm };
+            console.log('ClusteringScatterPlot: Sending filter data:', filterData);
+            onTermSelect(filterData);
+        }
+    };
+
+    if (loading) {
+        return <div className="loading-pane">載入聚類資料中...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className="error-pane">
+                <p>載入聚類資料失敗: {error.message}</p>
+            </div>
+        );
+    }
+
+    return <ReactECharts option={getOption()} style={{ height: '300px', width: '100%' }} onEvents={{ 'click': onChartClick }} />;
 };
 
 export default ClusteringScatterPlot; 
