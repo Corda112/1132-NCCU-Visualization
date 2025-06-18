@@ -21,29 +21,29 @@ function KLineChart({ onRangeChange }) {
                 });
                 
                 const d = response.data.map(row => ({
-                    ...row,
-                    date: new Date(row.timestamp || row.date || row.Date),
-                    open: +row.Open,
-                    high: +row.High,
-                    low: +row.Low,
-                    close: +row.Close,
-                    volume: +row.Volume
-                })).sort((a, b) => a.date - b.date);
+                ...row,
+                date: new Date(row.timestamp || row.date || row.Date),
+                open: +row.Open,
+                high: +row.High,
+                low: +row.Low,
+                close: +row.Close,
+                volume: +row.Volume
+            })).sort((a, b) => a.date - b.date);
                 
-                setData(d);
+            setData(d);
 
-                if (d.length > 0) {
-                    const fullRangeIndices = [0, d.length - 1];
-                    setRange(fullRangeIndices);
+            if (d.length > 0) {
+                const fullRangeIndices = [0, d.length - 1];
+                setRange(fullRangeIndices);
 
-                    if (onRangeChange) {
-                        const fullRangeTime = {
-                            from: d[fullRangeIndices[0]].date.getTime(),
-                            to: d[fullRangeIndices[1]].date.getTime()
-                        };
-                        onRangeChange(fullRangeTime);
-                    }
+                if (onRangeChange) {
+                    const fullRangeTime = {
+                        from: d[fullRangeIndices[0]].date.getTime(),
+                        to: d[fullRangeIndices[1]].date.getTime()
+                    };
+                    onRangeChange(fullRangeTime);
                 }
+            }
             } catch (error) {
                 const errorInfo = handleApiError(error);
                 setError(errorInfo);

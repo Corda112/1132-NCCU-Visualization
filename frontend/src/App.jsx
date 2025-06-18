@@ -20,7 +20,9 @@ function App() {
     }, []);
 
     const handleTermSelect = useCallback((newFilter) => {
+        console.log('App: handleTermSelect called with:', newFilter);
         setFilter(newFilter);
+        console.log('App: filter state updated to:', newFilter);
     }, []);
 
     const renderContent = () => {

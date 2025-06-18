@@ -1,9 +1,7 @@
+import axios from 'axios';
+
 // API 配置
-const API_CONFIG = {
-    BASE_URL: process.env.REACT_APP_API_URL || 'http://localhost:3001',
-    TIMEOUT: 10000, // 10秒超時
-    RETRY_ATTEMPTS: 3
-};
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 // API 端點
 export const API_ENDPOINTS = {
@@ -12,58 +10,90 @@ export const API_ENDPOINTS = {
     SEMANTIC: '/api/semantic',
     TERM_NGRAM: '/api/term-ngram',
     ARTICLES: '/api/articles',
-    CLUSTERS: '/api/clusters',
-    HEALTH: '/health'
+    CLUSTERS: '/api/clusters'
 };
 
-// 請求配置
+// 獲取完整的 API URL
 export const getApiUrl = (endpoint) => {
-    return `${API_CONFIG.BASE_URL}${endpoint}`;
+    const url = `${API_BASE_URL}${endpoint}`;
+    console.log('API URL:', url);
+    return url;
 };
 
-// 錯誤處理
+// API 錯誤處理函數
 export const handleApiError = (error) => {
-    if (error.response) {
-        // 伺服器回應錯誤
-        const status = error.response.status;
-        const message = error.response.data?.message || 'Unknown error';
-        
-        switch (status) {
-            case 400:
-                console.error('請求參數錯誤:', message);
-                break;
-            case 429:
-                console.error('請求過於頻繁，請稍後再試');
-                break;
-            case 500:
-                console.error('伺服器內部錯誤:', message);
-                break;
-            default:
-                console.error(`API錯誤 ${status}:`, message);
-        }
-        
+    console.error('API Error:', error);
+    
+    if (!error.response) {
+        // 網絡錯誤
         return {
-            status,
-            message,
-            isRateLimited: status === 429
-        };
-    } else if (error.request) {
-        // 網路錯誤
-        console.error('網路連接錯誤:', error.message);
-        return {
-            status: 0,
-            message: '無法連接到伺服器，請檢查網路連接',
-            isNetworkError: true
-        };
-    } else {
-        // 其他錯誤
-        console.error('未知錯誤:', error.message);
-        return {
-            status: -1,
-            message: '發生未知錯誤',
-            isUnknownError: true
+            message: '網絡連接失敗，請檢查網絡連接或稍後重試',
+            isNetworkError: true,
+            status: 0
         };
     }
+
+    const status = error.response.status;
+    const data = error.response.data;
+
+    if (status === 429) {
+        return {
+            message: '請求過於頻繁，請稍後再試',
+            isRateLimited: true,
+            status: status
+        };
+    }
+
+    if (status === 400) {
+        return {
+            message: data?.message || '請求參數錯誤',
+            status: status
+        };
+    }
+
+    if (status === 500) {
+        return {
+            message: '伺服器內部錯誤，查詢時間可能過長',
+            status: status
+        };
+    }
+
+    return {
+        message: data?.message || `請求失敗 (${status})`,
+        status: status
+    };
 };
 
-export default API_CONFIG; 
+// 創建帶有預設配置的 axios 實例
+export const apiClient = axios.create({
+    baseURL: API_BASE_URL,
+    timeout: 30000, // 增加到30秒
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
+// 請求攔截器
+apiClient.interceptors.request.use(
+    (config) => {
+        console.log('API Request:', config.method?.toUpperCase(), config.url, config.params);
+        return config;
+    },
+    (error) => {
+        console.error('Request Error:', error);
+        return Promise.reject(error);
+    }
+);
+
+// 響應攔截器
+apiClient.interceptors.response.use(
+    (response) => {
+        console.log('API Response:', response.status, response.config.url, 
+                   'Data length:', Array.isArray(response.data) ? response.data.length : 'Object');
+        return response;
+    },
+    (error) => {
+        console.error('Response Error:', error.response?.status, error.config?.url, error.message);
+        return Promise.reject(error);
+    }
+); 

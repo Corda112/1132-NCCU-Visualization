@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { getApiUrl, API_ENDPOINTS, handleApiError } from '../config/api';
+import { apiClient, API_ENDPOINTS, handleApiError } from '../config/api';
 import './ReadingPane.css';
 
 const ReadingPane = ({ filter }) => {
@@ -9,35 +8,52 @@ const ReadingPane = ({ filter }) => {
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [queryTime, setQueryTime] = useState(null);
 
     useEffect(() => {
         const fetchArticles = async () => {
             setLoading(true);
             setError(null);
+            setQueryTime(null);
             
             try {
-                const apiUrl = getApiUrl(API_ENDPOINTS.ARTICLES);
                 const requestParams = { ...filter, page };
                 
-                console.log('ReadingPane: Making API request to:', apiUrl);
+                console.log('ReadingPane: Making API request');
                 console.log('ReadingPane: Request params:', requestParams);
+                console.log('ReadingPane: Current filter state:', filter);
                 
-                const response = await axios.get(apiUrl, {
-                    params: requestParams,
-                    timeout: 10000
+                const startTime = Date.now();
+                const response = await apiClient.get(API_ENDPOINTS.ARTICLES, {
+                    params: requestParams
                 });
+                const requestTime = Date.now() - startTime;
                 
-                console.log('ReadingPane: API response:', response.data);
+                console.log('ReadingPane: API response received');
+                console.log('ReadingPane: Articles count:', response.data.articles?.length || 0);
+                console.log('ReadingPane: Query time from server:', response.data.queryTime, 'ms');
+                console.log('ReadingPane: Total request time:', requestTime, 'ms');
                 
                 setArticles(response.data.articles || []);
                 setTotalPages(response.data.totalPages || 0);
+                setQueryTime(response.data.queryTime || requestTime);
             } catch (error) {
                 console.error('ReadingPane: API error:', error);
+                console.error('ReadingPane: Error details:', {
+                    message: error.message,
+                    response: error.response?.data,
+                    status: error.response?.status
+                });
                 const errorInfo = handleApiError(error);
                 setError(errorInfo);
                 
-                // 如果是速率限制，顯示特殊訊息
-                if (errorInfo.isRateLimited) {
+                // 特殊錯誤處理
+                if (error.code === 'ECONNABORTED') {
+                    setError({
+                        ...errorInfo,
+                        message: '查詢超時，資料量過大，請縮小搜尋範圍'
+                    });
+                } else if (errorInfo.isRateLimited) {
                     setError({
                         ...errorInfo,
                         message: '搜尋過於頻繁，請等待5分鐘後再試'
@@ -56,7 +72,8 @@ const ReadingPane = ({ filter }) => {
             return;
         }
         
-        console.log('ReadingPane: Current filter:', filter);
+        console.log('ReadingPane: useEffect triggered, current filter:', filter);
+        console.log('ReadingPane: Filter object keys:', Object.keys(filter || {}));
         
         // 不管是否有filter，都嘗試載入文章
         fetchArticles();
@@ -75,7 +92,14 @@ const ReadingPane = ({ filter }) => {
     };
 
     if (loading) {
-        return <div className="loading-pane">載入文章中...</div>;
+        return (
+            <div className="loading-pane">
+                載入文章中...
+                {queryTime && <div style={{ fontSize: '0.8em', color: '#666' }}>
+                    上次查詢耗時: {queryTime}ms
+                </div>}
+            </div>
+        );
     }
 
     if (error) {
@@ -84,6 +108,9 @@ const ReadingPane = ({ filter }) => {
                 <div className="error-message">
                     <h4>載入失敗</h4>
                     <p>{error.message}</p>
+                    {error.status && <p style={{ fontSize: '0.8em', color: '#666' }}>
+                        錯誤碼: {error.status}
+                    </p>}
                     {error.isNetworkError && (
                         <button onClick={() => window.location.reload()}>
                             重新載入
@@ -106,9 +133,33 @@ const ReadingPane = ({ filter }) => {
                             {filter.date && <div>日期: {filter.date}</div>}
                             {filter.sentiment && <div>情緒: {filter.sentiment}</div>}
                         </div>
+                        <button 
+                            onClick={() => {
+                                console.log('ReadingPane: Clearing filter');
+                                setArticles([]);
+                                // 這裡需要通知父組件清除過濾器
+                            }}
+                            style={{ 
+                                marginTop: '10px', 
+                                padding: '5px 10px',
+                                backgroundColor: '#f0f0f0',
+                                border: '1px solid #ccc',
+                                borderRadius: '4px',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            清除搜索條件
+                        </button>
                     </div>
                 ) : (
-                    '點擊「詞彙」或「N-gram」圖表中的資料點來查看相關文章'
+                    <div>
+                        <p>💡 請點擊左側圖表中的資料點來查看相關文章</p>
+                        <div style={{ fontSize: '0.85em', color: '#888', marginTop: '8px' }}>
+                            <p>• 點擊「社群情緒分析」圖表的線條</p>
+                            <p>• 點擊「術語」或「N-gram」圖表的線條</p>
+                            <p>• 點擊「聚類」圖表的散點</p>
+                        </div>
+                    </div>
                 )}
             </div>
         );
@@ -116,7 +167,7 @@ const ReadingPane = ({ filter }) => {
 
     return (
         <div className="reading-pane">
-            {/* 顯示當前搜索條件 */}
+            {/* 顯示當前搜索條件和效能資訊 */}
             {filter && (filter.term || filter.date || filter.sentiment) && (
                 <div className="search-info" style={{ 
                     marginBottom: '15px', 
@@ -133,6 +184,11 @@ const ReadingPane = ({ filter }) => {
                     <span style={{ marginLeft: '8px', color: '#666' }}>
                         (共 {articles.length} 篇文章)
                     </span>
+                    {queryTime && (
+                        <span style={{ marginLeft: '8px', color: '#999', fontSize: '0.8em' }}>
+                            查詢耗時: {queryTime}ms
+                        </span>
+                    )}
                 </div>
             )}
             

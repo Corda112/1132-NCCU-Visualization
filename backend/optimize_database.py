@@ -1,68 +1,13 @@
+#!/usr/bin/env python3
+"""
+資料庫效能優化腳本
+專門用於為 semantic_clustering_sentiment 表添加必要的索引
+"""
+
 import sqlite3
-import json
 import os
 import time
-
-def add_data_to_db():
-    db_path = os.path.join(os.path.dirname(__file__), 'db.sqlite3')
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-
-    # Create and populate semantic_clustering_sentiment table
-    semantic_json_path = os.path.join(os.path.dirname(__file__), 'Final_semantic_clustering_sentiment.json')
-    if os.path.exists(semantic_json_path):
-        print("Processing Final_semantic_clustering_sentiment.json...")
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS semantic_clustering_sentiment (
-            id TEXT PRIMARY KEY,
-            cleaned_text TEXT,
-            createdAt TEXT,
-            cluster_id INTEGER,
-            sentiment TEXT,
-            x REAL,
-            y REAL
-        )
-        ''')
-
-        with open(semantic_json_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            for item in data:
-                cursor.execute('''
-                INSERT OR REPLACE INTO semantic_clustering_sentiment (id, cleaned_text, createdAt, cluster_id, sentiment, x, y)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                ''', (item['id'], item['cleaned_text'], item['createdAt'], item['cluster_id'], item['sentiment'], item['x'], item['y']))
-        print("Finished processing Final_semantic_clustering_sentiment.json.")
-    else:
-        print(f"File not found: {semantic_json_path}")
-
-    # Create and populate term_ngram_frequency table
-    term_json_path = os.path.join(os.path.dirname(__file__), 'Final_term_ngram_frequency.json')
-    if os.path.exists(term_json_path):
-        print("Processing Final_term_ngram_frequency.json...")
-        cursor.execute('''
-        CREATE TABLE IF NOT EXISTS term_ngram_frequency (
-            date TEXT,
-            term TEXT,
-            frequency INTEGER,
-            PRIMARY KEY (date, term)
-        )
-        ''')
-        
-        with open(term_json_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            for date, terms in data.items():
-                for term, frequency in terms.items():
-                    cursor.execute('''
-                    INSERT OR REPLACE INTO term_ngram_frequency (date, term, frequency)
-                    VALUES (?, ?, ?)
-                    ''', (date, term, frequency))
-        print("Finished processing Final_term_ngram_frequency.json.")
-    else:
-        print(f"File not found: {term_json_path}")
-
-    conn.commit()
-    conn.close()
-    print("Database has been updated successfully.")
+import sys
 
 def create_performance_indexes():
     """為資料庫表創建效能索引"""
@@ -112,6 +57,11 @@ def create_performance_indexes():
                 'name': 'idx_date_cluster',
                 'sql': 'CREATE INDEX IF NOT EXISTS idx_date_cluster ON semantic_clustering_sentiment(createdAt, cluster_id)',
                 'description': '複合索引 (日期+聚類，用於聚類時間查詢)'
+            },
+            {
+                'name': 'idx_text_search',
+                'sql': 'CREATE INDEX IF NOT EXISTS idx_text_search ON semantic_clustering_sentiment(cleaned_text)',
+                'description': 'cleaned_text 索引 (用於文本搜索優化)'
             }
         ]
         
@@ -174,6 +124,14 @@ def create_performance_indexes():
             {
                 'name': '複合查詢 (日期+情緒)',
                 'sql': "SELECT COUNT(*) FROM semantic_clustering_sentiment WHERE date(createdAt) = '2022-09-11' AND sentiment = 'Neutral'"
+            },
+            {
+                'name': '聚類查詢',
+                'sql': "SELECT COUNT(*) FROM semantic_clustering_sentiment WHERE cluster_id = 1"
+            },
+            {
+                'name': '文本搜索',
+                'sql': "SELECT COUNT(*) FROM semantic_clustering_sentiment WHERE cleaned_text LIKE '%bitcoin%'"
             }
         ]
         
@@ -217,31 +175,79 @@ def show_index_info():
             print(f"\n索引名稱: {name}")
             print(f"SQL: {sql}")
         
+        # 顯示索引使用統計
+        print("\n📊 索引使用統計:")
+        cursor.execute("PRAGMA index_list(semantic_clustering_sentiment)")
+        index_list = cursor.fetchall()
+        
+        for index_info in index_list:
+            index_name = index_info[1]
+            if not index_name.startswith('sqlite_'):
+                try:
+                    cursor.execute(f"PRAGMA index_info({index_name})")
+                    index_details = cursor.fetchall()
+                    print(f"  {index_name}: {len(index_details)} 欄位")
+                except:
+                    pass
+        
     except sqlite3.Error as e:
         print(f"❌ 錯誤: {e}")
     finally:
         if conn:
             conn.close()
 
-if __name__ == '__main__':
-    # 首先檢查是否只需要創建索引
-    import sys
+def vacuum_database():
+    """清理和壓縮資料庫"""
+    db_path = './db.sqlite3'
     
-    if len(sys.argv) > 1 and sys.argv[1] == "--index-only":
-        print("🚀 開始資料庫索引優化...")
-        print("=" * 50)
+    try:
+        print("\n🧹 開始資料庫清理...")
+        conn = sqlite3.connect(db_path)
         
+        # 檢查資料庫大小
+        file_size = os.path.getsize(db_path)
+        print(f"清理前大小: {file_size / 1024 / 1024:.2f} MB")
+        
+        # 執行 VACUUM
+        conn.execute("VACUUM")
+        conn.close()
+        
+        # 檢查清理後大小
+        new_file_size = os.path.getsize(db_path)
+        print(f"清理後大小: {new_file_size / 1024 / 1024:.2f} MB")
+        print(f"節省空間: {(file_size - new_file_size) / 1024 / 1024:.2f} MB")
+        
+    except sqlite3.Error as e:
+        print(f"❌ 清理失敗: {e}")
+
+if __name__ == "__main__":
+    print("🚀 資料庫效能優化工具")
+    print("=" * 50)
+    
+    if len(sys.argv) > 1 and sys.argv[1] == "--info-only":
+        # 只顯示索引信息
+        show_index_info()
+    elif len(sys.argv) > 1 and sys.argv[1] == "--vacuum":
+        # 只執行清理
+        vacuum_database()
+    else:
+        # 完整優化流程
         success = create_performance_indexes()
         
         if success:
             show_index_info()
-            print("\n🎉 資料庫索引優化完成!")
+            
+            # 詢問是否執行清理
+            response = input("\n是否執行資料庫清理 (VACUUM)? [y/N]: ")
+            if response.lower() in ['y', 'yes']:
+                vacuum_database()
+            
+            print("\n🎉 資料庫效能優化完成!")
             print("\n📌 建議:")
             print("  1. 重新啟動後端服務以獲得最佳效能")
             print("  2. 監控查詢時間是否有所改善")
             print("  3. 定期執行 ANALYZE 指令更新統計信息")
+            print("  4. 使用 --info-only 參數查看索引狀態")
+            print("  5. 使用 --vacuum 參數清理資料庫")
         else:
-            print("\n❌ 優化失敗，請檢查錯誤信息")
-    else:
-        # 原本的資料導入流程
-        add_data_to_db()
+            print("\n❌ 優化失敗，請檢查錯誤信息") 

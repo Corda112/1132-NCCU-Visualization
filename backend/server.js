@@ -70,7 +70,7 @@ let db;
 
 const initDatabase = () => {
     return new Promise((resolve, reject) => {
-        db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+        db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, async (err) => {
             if (err) {
                 console.error('無法連接 SQLite:', err.message);
                 reject(err);
@@ -83,8 +83,70 @@ const initDatabase = () => {
                 db.run('PRAGMA cache_size=10000;');
                 db.run('PRAGMA temp_store=memory;');
                 
-                resolve();
+                // 自動創建效能索引
+                try {
+                    await createPerformanceIndexes();
+                    resolve();
+                } catch (indexError) {
+                    console.warn('⚠️ 索引創建警告:', indexError.message);
+                    // 不要因為索引失敗而阻止服務啟動
+                    resolve();
+                }
             }
+        });
+    });
+};
+
+const createPerformanceIndexes = () => {
+    return new Promise((resolve, reject) => {
+        console.log('🔧 檢查並創建資料庫索引...');
+        
+        const indexes = [
+            'CREATE INDEX IF NOT EXISTS idx_created_at ON semantic_clustering_sentiment(createdAt)',
+            'CREATE INDEX IF NOT EXISTS idx_sentiment ON semantic_clustering_sentiment(sentiment)',
+            'CREATE INDEX IF NOT EXISTS idx_cluster_id ON semantic_clustering_sentiment(cluster_id)',
+            'CREATE INDEX IF NOT EXISTS idx_date_sentiment ON semantic_clustering_sentiment(createdAt, sentiment)',
+            'CREATE INDEX IF NOT EXISTS idx_date_cluster ON semantic_clustering_sentiment(createdAt, cluster_id)',
+            'CREATE INDEX IF NOT EXISTS idx_text_search ON semantic_clustering_sentiment(cleaned_text)'
+        ];
+        
+        let completed = 0;
+        const results = [];
+        
+        indexes.forEach((indexSql, index) => {
+            const startTime = Date.now();
+            db.run(indexSql, function(err) {
+                const indexName = indexSql.match(/idx_\w+/)[0];
+                
+                if (err) {
+                    if (err.message.includes('already exists')) {
+                        console.log(`✅ 索引 ${indexName} 已存在`);
+                        results.push({ index: indexName, status: 'exists' });
+                    } else {
+                        console.warn(`⚠️ 索引 ${indexName} 創建警告:`, err.message);
+                        results.push({ index: indexName, status: 'warning', error: err.message });
+                    }
+                } else {
+                    const time = Date.now() - startTime;
+                    console.log(`✅ 索引 ${indexName} 創建完成 (${time}ms)`);
+                    results.push({ index: indexName, status: 'created', time });
+                }
+                
+                completed++;
+                if (completed === indexes.length) {
+                    // 更新統計信息
+                    db.run('ANALYZE semantic_clustering_sentiment', (analyzeErr) => {
+                        if (analyzeErr) {
+                            console.warn('⚠️ 統計信息更新警告:', analyzeErr.message);
+                        } else {
+                            console.log('📊 表統計信息已更新');
+                        }
+                        
+                        console.log('🎉 資料庫索引檢查完成');
+                        resolve(results);
+                    });
+                }
+            });
         });
     });
 };
@@ -185,13 +247,15 @@ app.get('/api/term-ngram', validateDateRange, async (req, res) => {
     }
 });
 
-// Articles API (加強安全性和驗證)
+// Articles API (優化效能版本)
 app.get('/api/articles', searchLimiter, validateArticleSearch, async (req, res) => {
     try {
         const { term, date, sentiment, page = 1, limit = 30 } = req.query;
         const offset = (page - 1) * limit;
-        const maxLimit = Math.min(limit, 100); // 強制限制最大值
+        const maxLimit = Math.min(limit, 50); // 降低單次查詢限制
 
+        console.log('Articles API called with params:', { term, date, sentiment, page, limit });
+        
         let query = `
             SELECT id, cleaned_text, createdAt, sentiment 
             FROM semantic_clustering_sentiment
@@ -199,44 +263,84 @@ app.get('/api/articles', searchLimiter, validateArticleSearch, async (req, res) 
         const params = [];
         const conditions = [];
 
-        if (term) {
-            conditions.push('cleaned_text LIKE ?');
-            params.push(`%${term}%`);
-        }
+        // 優化查詢條件順序，最選擇性的條件在前
         if (date) {
-            conditions.push('date(createdAt) = date(?)');
-            params.push(date);
+            // 使用更精確的日期比較，處理ISO格式
+            conditions.push('date(createdAt) = ?');
+            // 確保日期格式為 YYYY-MM-DD，處理ISO日期
+            const dateStr = new Date(date).toISOString().split('T')[0];
+            params.push(dateStr);
+            console.log('Date filter applied:', date, '->', dateStr);
         }
         if (sentiment) {
             conditions.push('sentiment = ?');
             params.push(sentiment);
+            console.log('Sentiment filter applied:', sentiment);
+        }
+        if (term) {
+            // 限制LIKE查詢的範圍
+            if (term.length < 2) {
+                return res.status(400).json({ 
+                    error: 'Search term too short', 
+                    message: '搜尋詞至少需要2個字元' 
+                });
+            }
+            conditions.push('cleaned_text LIKE ?');
+            params.push(`%${term}%`);
+            console.log('Term filter applied:', term);
         }
 
         if (conditions.length > 0) {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
-        // 分頁查詢
-        query += ` ORDER BY createdAt DESC LIMIT ? OFFSET ?`;
-        params.push(maxLimit, offset);
+        // 如果沒有任何過濾條件，限制結果數量
+        if (conditions.length === 0) {
+            query += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
+            params.push(Math.min(maxLimit, 20), offset); // 無過濾時更嚴格的限制
+        } else {
+            query += ' ORDER BY createdAt DESC LIMIT ? OFFSET ?';
+            params.push(maxLimit, offset);
+        }
 
+        console.log('Executing query:', query);
+        console.log('With params:', params);
+        
+        const startTime = Date.now();
         const rows = await queryDatabase(query, params);
+        const queryTime = Date.now() - startTime;
+        
+        console.log(`Articles query completed in ${queryTime}ms, returned ${rows.length} rows`);
 
-        // 計算總數 (優化版本)
-        let countQuery = query.replace(/SELECT.*?FROM/, 'SELECT COUNT(*) as count FROM')
-                             .replace(/ORDER BY.*?LIMIT.*?OFFSET.*?$/, '');
-        const countParams = params.slice(0, -2);
-
-        const countResult = await queryDatabase(countQuery, countParams);
-        const totalCount = countResult[0]?.count || 0;
+        // 簡化總數計算 - 如果有結果且未達到限制，不需要額外計算
+        let totalCount = rows.length;
+        let totalPages = 1;
+        
+        if (rows.length === maxLimit) {
+            // 只有在可能有更多結果時才執行count查詢
+            let countQuery = query.replace(/SELECT.*?FROM/, 'SELECT COUNT(*) as count FROM')
+                                 .replace(/ORDER BY.*?LIMIT.*?OFFSET.*?$/, '');
+            const countParams = params.slice(0, -2);
+            
+            const countStartTime = Date.now();
+            const countResult = await queryDatabase(countQuery, countParams);
+            const countTime = Date.now() - countStartTime;
+            
+            totalCount = countResult[0]?.count || 0;
+            totalPages = Math.ceil(totalCount / maxLimit);
+            
+            console.log(`Count query completed in ${countTime}ms, total: ${totalCount}`);
+        }
 
         res.json({
             articles: rows,
-            totalPages: Math.ceil(totalCount / maxLimit),
-            currentPage: page,
-            totalCount: totalCount
+            totalPages: totalPages,
+            currentPage: parseInt(page),
+            totalCount: totalCount,
+            queryTime: queryTime
         });
     } catch (err) {
+        console.error('Articles API error:', err);
         handleDatabaseError(err, res);
     }
 });
@@ -261,6 +365,104 @@ app.get('/api/clusters', validateClusterQuery, async (req, res) => {
         res.json(rows);
     } catch (err) {
         handleDatabaseError(err, res);
+    }
+});
+
+// 資料庫索引優化端點 (僅開發環境使用)
+app.post('/api/admin/create-indexes', async (req, res) => {
+    if (process.env.NODE_ENV === 'production') {
+        return res.status(403).json({ error: 'Not allowed in production' });
+    }
+    
+    try {
+        console.log('🔧 開始創建資料庫索引...');
+        
+        const indexes = [
+            'CREATE INDEX IF NOT EXISTS idx_created_at ON semantic_clustering_sentiment(createdAt)',
+            'CREATE INDEX IF NOT EXISTS idx_sentiment ON semantic_clustering_sentiment(sentiment)',
+            'CREATE INDEX IF NOT EXISTS idx_cluster_id ON semantic_clustering_sentiment(cluster_id)',
+            'CREATE INDEX IF NOT EXISTS idx_date_sentiment ON semantic_clustering_sentiment(createdAt, sentiment)',
+            'CREATE INDEX IF NOT EXISTS idx_date_cluster ON semantic_clustering_sentiment(createdAt, cluster_id)',
+            'CREATE INDEX IF NOT EXISTS idx_text_search ON semantic_clustering_sentiment(cleaned_text)'
+        ];
+        
+        const results = [];
+        
+        for (const indexSql of indexes) {
+            try {
+                const startTime = Date.now();
+                await new Promise((resolve, reject) => {
+                    db.run(indexSql, (err) => {
+                        if (err) reject(err);
+                        else resolve();
+                    });
+                });
+                const endTime = Date.now();
+                
+                const indexName = indexSql.match(/idx_\w+/)[0];
+                results.push({
+                    index: indexName,
+                    status: 'success',
+                    time: `${endTime - startTime}ms`
+                });
+                console.log(`✅ 索引 ${indexName} 創建完成 (${endTime - startTime}ms)`);
+            } catch (error) {
+                const indexName = indexSql.match(/idx_\w+/)[0];
+                results.push({
+                    index: indexName,
+                    status: 'error',
+                    error: error.message
+                });
+                console.error(`❌ 索引 ${indexName} 創建失敗:`, error.message);
+            }
+        }
+        
+        // 更新表統計信息
+        try {
+            console.log('📊 更新表統計信息...');
+            await new Promise((resolve, reject) => {
+                db.run('ANALYZE semantic_clustering_sentiment', (err) => {
+                    if (err) reject(err);
+                    else resolve();
+                });
+            });
+            console.log('✅ 統計信息更新完成');
+            results.push({ index: 'ANALYZE', status: 'success' });
+        } catch (error) {
+            console.error('❌ 統計信息更新失敗:', error.message);
+            results.push({ index: 'ANALYZE', status: 'error', error: error.message });
+        }
+        
+        // 檢查創建的索引
+        const indexList = await new Promise((resolve, reject) => {
+            db.all(`
+                SELECT name, sql 
+                FROM sqlite_master 
+                WHERE type='index' 
+                  AND tbl_name='semantic_clustering_sentiment'
+                  AND name NOT LIKE 'sqlite_%'
+                ORDER BY name
+            `, (err, rows) => {
+                if (err) reject(err);
+                else resolve(rows);
+            });
+        });
+        
+        console.log('🎉 索引優化完成!');
+        console.log('現有索引:', indexList.map(idx => idx.name));
+        
+        res.json({
+            message: '資料庫索引優化完成',
+            results,
+            indexes: indexList
+        });
+        
+    } catch (error) {
+        console.error('❌ 索引創建失敗:', error);
+        res.status(500).json({ 
+            error: '索引創建失敗', 
+            details: error.message 
+        });
     }
 });
 
