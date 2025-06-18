@@ -248,14 +248,27 @@ app.get('/api/term-ngram', validateDateRange, async (req, res) => {
     }
 });
 
-// Articles API (優化效能版本)
+// 簡單查詢結果緩存 (開發用，生產環境建議使用Redis)
+const queryCache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5分鐘
+
+// Articles API (高效能分頁版本)
 app.get('/api/articles', searchLimiter, validateArticleSearch, async (req, res) => {
     try {
-        const { term, date, sentiment, page = 1, limit = 30 } = req.query;
+        const { term, date, sentiment, page = 1, limit = 30, getTotalCount } = req.query;
         const offset = (page - 1) * limit;
         const maxLimit = Math.min(limit, 50); // 降低單次查詢限制
 
-        console.log('Articles API called with params:', { term, date, sentiment, page, limit });
+        console.log('Articles API called with params:', { term, date, sentiment, page, limit, getTotalCount });
+        
+        // 🧠 智能緩存策略
+        const cacheKey = JSON.stringify({ term, date, sentiment, page, limit: maxLimit });
+        const cached = queryCache.get(cacheKey);
+        
+        if (cached && (Date.now() - cached.timestamp) < CACHE_TTL) {
+            console.log('📦 返回緩存結果 (', Date.now() - cached.timestamp, 'ms old)');
+            return res.json(cached.data);
+        }
         
         let query = `
             SELECT id, cleaned_text, createdAt, sentiment 
@@ -313,33 +326,109 @@ app.get('/api/articles', searchLimiter, validateArticleSearch, async (req, res) 
         
         console.log(`Articles query completed in ${queryTime}ms, returned ${rows.length} rows`);
 
-        // 簡化總數計算 - 如果有結果且未達到限制，不需要額外計算
+        // 🚀 優化分頁邏輯：避免重複查詢
         let totalCount = rows.length;
         let totalPages = 1;
+        let hasMore = false;
+        let countTime = 0;
         
+        // 智能分頁策略：只在必要時執行COUNT查詢
         if (rows.length === maxLimit) {
-            // 只有在可能有更多結果時才執行count查詢
-            let countQuery = query.replace(/SELECT.*?FROM/, 'SELECT COUNT(*) as count FROM')
-                                 .replace(/ORDER BY.*?LIMIT.*?OFFSET.*?$/, '');
-            const countParams = params.slice(0, -2);
+            hasMore = true;
             
-            const countStartTime = Date.now();
-            const countResult = await queryDatabase(countQuery, countParams);
-            const countTime = Date.now() - countStartTime;
+            // 僅在首頁或明確請求總數時執行COUNT查詢
+            const shouldGetTotal = page == 1 || req.query.getTotalCount === 'true';
             
-            totalCount = countResult[0]?.count || 0;
-            totalPages = Math.ceil(totalCount / maxLimit);
-            
-            console.log(`Count query completed in ${countTime}ms, total: ${totalCount}`);
+            if (shouldGetTotal) {
+                // 重新構建COUNT查詢，確保參數匹配
+                let countQuery = `
+                    SELECT COUNT(*) as count 
+                    FROM semantic_clustering_sentiment
+                `;
+                let countParams = [];
+                
+                // 重新添加WHERE條件
+                const countConditions = [];
+                if (date) {
+                    countConditions.push('date(createdAt) = ?');
+                    const dateStr = new Date(date).toISOString().split('T')[0];
+                    countParams.push(dateStr);
+                }
+                if (sentiment) {
+                    countConditions.push('sentiment = ?');
+                    countParams.push(sentiment);
+                }
+                if (term) {
+                    countConditions.push('cleaned_text LIKE ?');
+                    countParams.push(`%${term}%`);
+                }
+                
+                if (countConditions.length > 0) {
+                    countQuery += ' WHERE ' + countConditions.join(' AND ');
+                }
+                
+                console.log('Executing count query:', countQuery);
+                console.log('With count params:', countParams);
+                
+                const countStartTime = Date.now();
+                const countResult = await queryDatabase(countQuery, countParams);
+                countTime = Date.now() - countStartTime;
+                
+                totalCount = countResult[0]?.count || 0;
+                totalPages = Math.ceil(totalCount / maxLimit);
+                
+                console.log(`Count query completed in ${countTime}ms, total: ${totalCount}`);
+            } else {
+                // 估算分頁數：當前頁數 + 1（因為還有更多數據）
+                totalPages = parseInt(page) + 1;
+                totalCount = -1; // 表示未計算總數
+            }
         }
 
-        res.json({
+        // 響應格式優化
+        const response = {
             articles: rows,
-            totalPages: totalPages,
-            currentPage: parseInt(page),
-            totalCount: totalCount,
-            queryTime: queryTime
-        });
+            pagination: {
+                currentPage: parseInt(page),
+                totalPages: totalPages,
+                hasMore: hasMore,
+                pageSize: maxLimit,
+                ...(totalCount !== -1 && { totalCount: totalCount })
+            },
+            performance: {
+                queryTime: queryTime,
+                ...(countTime > 0 && { countTime: countTime }),
+                totalTime: queryTime + countTime
+            }
+        };
+
+        // 兼容性：保留舊格式字段
+        response.totalPages = totalPages;
+        response.currentPage = parseInt(page);
+        if (totalCount !== -1) {
+            response.totalCount = totalCount;
+        }
+        response.queryTime = queryTime;
+
+        // 💾 緩存結果（僅快速查詢結果，避免緩存大量數據）
+        if (queryTime < 100 && response.articles.length <= 50) {
+            queryCache.set(cacheKey, {
+                data: response,
+                timestamp: Date.now()
+            });
+            
+            // 清理過期緩存 (簡單實現)
+            if (queryCache.size > 100) {
+                const now = Date.now();
+                for (const [key, value] of queryCache.entries()) {
+                    if ((now - value.timestamp) > CACHE_TTL) {
+                        queryCache.delete(key);
+                    }
+                }
+            }
+        }
+
+        res.json(response);
     } catch (err) {
         console.error('Articles API error:', err);
         handleDatabaseError(err, res);
@@ -467,13 +556,45 @@ app.post('/api/admin/create-indexes', async (req, res) => {
     }
 });
 
+// API性能監控端點
+app.get('/api/admin/performance', (req, res) => {
+    const cacheStats = {
+        size: queryCache.size,
+        entries: Array.from(queryCache.keys()).slice(0, 10) // 只顯示前10個
+    };
+    
+    res.json({
+        cache: cacheStats,
+        memory: process.memoryUsage(),
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+    });
+});
+
+// 清理緩存端點
+app.post('/api/admin/clear-cache', (req, res) => {
+    const oldSize = queryCache.size;
+    queryCache.clear();
+    
+    console.log(`🧹 手動清理緩存: ${oldSize} -> 0`);
+    res.json({
+        message: '緩存已清理',
+        clearedEntries: oldSize,
+        timestamp: new Date().toISOString()
+    });
+});
+
 // 健康檢查端點
 app.get('/health', (req, res) => {
     res.json({
         status: 'OK',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
-        environment: NODE_ENV
+        environment: NODE_ENV,
+        performance: {
+            cacheSize: queryCache.size,
+            memoryUsage: process.memoryUsage().heapUsed / 1024 / 1024 // MB
+        }
     });
 });
 
