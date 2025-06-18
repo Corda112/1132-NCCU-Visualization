@@ -131,7 +131,7 @@ const checkServer = () => {
 
 if (require.main === module) {
     console.log('🛠️  資料庫索引優化工具');
-    console.log('=' * 40);
+    console.log('='.repeat(40));
     
     checkServer();
 } 

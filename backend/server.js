@@ -70,7 +70,7 @@ let db;
 
 const initDatabase = () => {
     return new Promise((resolve, reject) => {
-        db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, async (err) => {
+        db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
             if (err) {
                 console.error('無法連接 SQLite:', err.message);
                 reject(err);
@@ -84,14 +84,15 @@ const initDatabase = () => {
                 db.run('PRAGMA temp_store=memory;');
                 
                 // 自動創建效能索引
-                try {
-                    await createPerformanceIndexes();
-                    resolve();
-                } catch (indexError) {
-                    console.warn('⚠️ 索引創建警告:', indexError.message);
-                    // 不要因為索引失敗而阻止服務啟動
-                    resolve();
-                }
+                createPerformanceIndexes()
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch((indexError) => {
+                        console.warn('⚠️ 索引創建警告:', indexError.message);
+                        // 不要因為索引失敗而阻止服務啟動
+                        resolve();
+                    });
             }
         });
     });

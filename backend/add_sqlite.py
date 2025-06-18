@@ -3,8 +3,11 @@ import json
 import os
 import time
 
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(SCRIPT_DIR, 'db.sqlite3')
+
 def add_data_to_db():
-    db_path = os.path.join(os.path.dirname(__file__), 'db.sqlite3')
+    db_path = DB_PATH
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
@@ -68,7 +71,7 @@ def create_performance_indexes():
     """為資料庫表創建效能索引"""
     
     # 資料庫路徑
-    db_path = './db.sqlite3'
+    db_path = DB_PATH
     
     if not os.path.exists(db_path):
         print(f"❌ 資料庫文件不存在: {db_path}")
@@ -197,7 +200,7 @@ def create_performance_indexes():
 
 def show_index_info():
     """顯示索引信息"""
-    db_path = './db.sqlite3'
+    db_path = DB_PATH
     
     try:
         conn = sqlite3.connect(db_path)

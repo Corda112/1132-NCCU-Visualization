@@ -187,7 +187,7 @@ class PerformanceTest {
 
     generateReport() {
         console.log('\n📋 效能測試報告');
-        console.log('=' * 50);
+        console.log('='.repeat(50));
         
         // 按執行時間排序
         const sortedResults = this.testResults
@@ -246,7 +246,7 @@ class PerformanceTest {
 if (require.main === module) {
     console.log('🚀 資料庫效能測試工具');
     console.log('測試目標: semantic_clustering_sentiment 表');
-    console.log('=' * 50);
+    console.log('='.repeat(50));
     
     const test = new PerformanceTest();
     test.run().then(() => {
