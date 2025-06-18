@@ -261,7 +261,7 @@ const ReadingPane = ({ filter }) => {
                     </>
                 ) : (
                     <>
-                        <div style={{ fontSize: '64px', marginBottom: '20px' }}>💡</div>
+                        <div style={{ fontSize: '48px', marginBottom: '20px' }}>📋</div>
                         <p style={{ fontSize: '18px', fontWeight: '500', color: '#52c41a', marginBottom: '16px' }}>
                             請點擊左側圖表中的資料點來查看相關文章
                         </p>
@@ -275,7 +275,7 @@ const ReadingPane = ({ filter }) => {
                             textAlign: 'left',
                             maxWidth: '400px'
                         }}>
-                            <div style={{ fontWeight: '500', marginBottom: '8px', color: '#52c41a' }}>📊 可用操作：</div>
+                            <div style={{ fontWeight: '500', marginBottom: '8px', color: '#52c41a' }}>可用操作：</div>
                             <div style={{ marginBottom: '4px' }}>• 點擊「社群情緒分析」圖表的線條</div>
                             <div style={{ marginBottom: '4px' }}>• 點擊「術語」或「N-gram」圖表的線條</div>
                             <div>• 點擊「聚類」圖表的散點</div>
@@ -306,7 +306,7 @@ const ReadingPane = ({ filter }) => {
                         marginBottom: '8px'
                     }}>
                         <div style={{ color: '#1890ff', fontWeight: '600' }}>
-                            🔍 搜索結果
+                            搜索結果
                         </div>
                         <div style={{ color: '#52c41a', fontWeight: '500' }}>
                             共 {articles.length} 篇文章
@@ -347,8 +347,8 @@ const ReadingPane = ({ filter }) => {
                             display: 'flex',
                             alignItems: 'center'
                         }}>
-                            <span style={{ marginRight: '6px' }}>⚡</span>
-                            查詢耗時: {queryTime}ms
+                            <span style={{ marginRight: '6px' }}>查詢耗時:</span>
+                            {queryTime}ms
                         </div>
                     )}
                 </div>
@@ -427,8 +427,8 @@ const ReadingPane = ({ filter }) => {
                                     border: `1px solid ${article.sentiment === 'Positive' ? '#d9f7be' : 
                                                         article.sentiment === 'Negative' ? '#ffccc7' : '#bae7ff'}`
                                 }}>
-                                    {article.sentiment === 'Positive' ? '😊 正面' : 
-                                     article.sentiment === 'Negative' ? '😞 負面' : '😐 中性'}
+                                    {article.sentiment === 'Positive' ? '正面' : 
+                                     article.sentiment === 'Negative' ? '負面' : '中性'}
                                 </span>
                             </div>
                         )}
