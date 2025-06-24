@@ -20,7 +20,9 @@ function App() {
     }, []);
 
     const handleTermSelect = useCallback((newFilter) => {
+        console.log('App: handleTermSelect called with:', newFilter);
         setFilter(newFilter);
+        console.log('App: filter state updated to:', newFilter);
     }, []);
 
     const renderContent = () => {
@@ -81,9 +83,9 @@ function App() {
 
                             <div className="insights-content">
                                 {activeRightTab === 'sentiment' && <SentimentChart range={selectedRange} onTermSelect={handleTermSelect} />}
-                                {activeRightTab === 'term' && <FrequencyChart range={selectedRange} type="term" onTermSelect={(term, date) => handleTermSelect({ term, date })} />}
-                                {activeRightTab === 'ngram' && <FrequencyChart range={selectedRange} type="ngram" onTermSelect={(term, date) => handleTermSelect({ term, date })} />}
-                                {activeRightTab === 'clustering' && <ClusteringScatterPlot range={selectedRange} />}
+                                {activeRightTab === 'term' && <FrequencyChart range={selectedRange} type="term" onTermSelect={handleTermSelect} />}
+                                {activeRightTab === 'ngram' && <FrequencyChart range={selectedRange} type="ngram" onTermSelect={handleTermSelect} />}
+                                {activeRightTab === 'clustering' && <ClusteringScatterPlot range={selectedRange} onTermSelect={handleTermSelect} />}
                             </div>
                         </div>
 

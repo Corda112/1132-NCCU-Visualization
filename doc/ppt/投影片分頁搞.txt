@@ -1,0 +1,203 @@
+以下為**投影片結構 + 每張投影片的重點與演講稿提示**。
+格式：`Slide #｜標題 →   ▸ 投影片重點（Bullet）   ▸ Speaker Notes（口語提示）   ▸ 視覺化 / 版面建議`
+
+---
+
+### 1｜Cryptocurrency Sentiment & Market Visualization
+
+▸ 專案副標題、作者、日期
+▸ 圖標：BTC/推特/圖表疊合
+**Notes**：30 秒自我介紹 +「用視覺化把 5 年推文變成可操作洞見」。
+
+---
+
+### 2｜任務目標 & 成果一覽
+
+▸ 自動發掘主題 → 即時情緒雷達
+▸ Demo 互動儀表板 + 時間序列模型
+▸ 驗證：情緒領先價格 4–6 h
+**Notes**：先給觀眾「要看什麼、能帶走什麼」。
+
+---
+
+### 3｜Agenda
+
+1. 問題與動機
+2. 資料來源與前處理
+3. 視覺化設計思路
+4. 互動 Demo & 案例洞見
+5. 成效評估 & 未來擴展
+6. 結論 / Q\&A
+   **Notes**：一句話概述每節。
+
+---
+
+## A｜背景 & 資料
+
+### 4｜問題與動機
+
+▸ 加密貨幣高波動 ⇒ 需即時情緒雷達
+▸ Fear & Greed 單維度、缺乏語境
+▸ 目標：整合價格・情緒・主題，做多維互動儀表板
+**Notes**：用 2022 LUNA 崩盤作引子（10 秒）。
+
+---
+
+### 5｜資料來源概覽
+
+▸ **價格**：alternative.me Crypto API（BTC/ETH 1h OHLCV）
+▸ **推文**：Apifycost ≈ \$0.0004/req）
+▸ 篩選條件：
+
+bitcoin OR btc OR crypto min_replies:3 min_retweets:10 min_faves:30
+  "includeSearchTerms": false,
+  "onlyImage": false,
+  "onlyQuote": false,
+  "onlyTwitterBlue": false,
+  "onlyVerifiedUsers": false,
+  "onlyVideo": false,
+    "sort": "Top",
+  "tweetLanguage": "en"
+
+
+▸ 時間範圍：2020-01-01 — 2024-12-31
+**Notes**：強調合規、覆蓋面 & 時間深度。
+
+---
+
+### 5-1｜資料來源概覽
+
+介紹ngix server
+{補圖}
+
+---
+
+
+
+### 6｜抓取與 ETL Pipeline
+
+▸ Scraper → RAW JSON (≈ 3.2 M)
+▸ 清洗：URL/@/RT/Emoji 處理、Hashtag 正規化
+▸ Tokenize・Lowercase・Lemma・Stopword + Crypto 自訂字典
+**視覺**：流程圖（左抓取→右特徵矩陣）。
+
+---
+
+### 7｜情緒模型三方比較
+
+▸ FinBERT／CryptoBERT／RoBERTa
+▸ 結果 (圖表縮圖)：FinBERT 中性 88%, CryptoBERT 正向 59% …
+▸ 一致性僅 23%，LLM (Sub-prompt)  > 傳統 BERT
+**Notes**：解釋為何改用自家 pipeline；秀三檔一致/衝突表格。
+
+---
+
+### 8｜驗證：情緒一致性統計
+
+▸ 完全一致 22.9 %／完全不同 7.0 %
+▸ 例句 × 3（表格）
+▸ 結論：須跨模型集成 + 人工校對
+**Notes**：交叉驗證步驟 = 方法嚴謹性背書。
+
+總結統計:
+總共同項目數量: 55142
+完全一致項目: 12611 (22.87%)
+部分一致項目: 38646 (70.08%)
+完全不一致項目: 3885 (7.05%)
+
+三個模型的特徵
+
+---
+
+## B｜視覺化 & 互動
+
+### 9｜前端架構 (React + D3)
+
+▸ React 組件化；D3 負責繪圖
+▸ WebSocket feed 可擴充即時資料
+**視覺**：系統示意圖（前端⇆API⇆DB）。
+
+---
+
+### 10｜主儀表板設計
+
+▸ 雙軸：價格線 (左)＋情緒面積 (右)
+▸ Brushing + Zoom；Hover 顯示頂級推文
+▸ 顏色：情緒冷暖漸層
+**視覺**：UI mockup。
+
+---
+
+### 11｜深入視圖
+
+▸ **Topic–Sentiment Sankey**：20 主題 ↔ 情緒流向
+▸ **UMAP 2D Scatter**：K-means 5 群 + Hover 頂級推文
+▸ **Sunburst**：主題–子詞雲
+**Notes**：說明為何選 UMAP（保局部+全局）。
+
+---
+
+### 12｜互動示例：2021-05 BTC Flash-Crash
+
+▸ Neg ↑ 130 % 6 h 前 → 價格 -30 %
+▸ Top topics：Energy, Musk, China Ban
+**Notes**：現場點選區段→右側動態更新。
+
+---
+
+## C｜模型 & 評估
+
+### 13｜UASTL 時間序列分解
+
+▸ μ 向量：對數趨勢
+▸ Σ 高斯不確定度，SE kernels {7, 30, 90 d}
+▸ p =\[7, 90, 365]，n\_s 動態跨度；n\_o, n\_i 魯棒迭代
+**視覺**：分解示意圖（趨勢/季節/殘差 + CI）。
+
+---
+
+### 14｜成效評估
+
+▸ Lead-Lag：情緒指標領先價格 4–6 h (max 12 h)
+▸ R² vs. Fear & Greed：+0.18
+▸ RMSE (UASTL + LSTM) vs Baseline
+**視覺**：條形圖 + 熱圖。
+
+---
+
+## D｜收斂 & 擴展
+
+### 15｜可行動洞見
+
+▸ L2 Scaling 興趣激增 ⇒ 內容策略／產品對接
+▸ DeFi Stake 負面情緒 ⇒ 教育材料 + UX 優化
+**Notes**：「So what?」具體建議 2-3 條。
+
+---
+
+### 16｜限制 & 未來工作
+
+▸ 英文社群偏差・API 抽樣限制
+▸ 多語言擴充（中文/西語）
+▸ Real-time Kafka 流 + GNN price 预测
+▸ 領域微調情緒模型
+**Notes**：顯示開放心態，預留合作空間。
+
+---
+
+### 17｜結論
+
+▸ 整合海量推文 → 互動儀表板 & 領先指標
+▸ 驗證：模型 + 案例
+▸ 歡迎提問／合作
+**Notes**：30 秒收尾＋呼籲行動。
+
+---
+
+### 18｜References
+
+▸ 依 IEEE 引用格式自動排版（列表 / 小字）。
+TextVista: NLP-Enriched Time-Series Text Data Visualizations
+Uncertainty-Aware Seasonal-Trend Decomposition Based on Loess
+
+---
