@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // API 配置
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 
+    (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3001');
 
 // API 端點
 export const API_ENDPOINTS = {

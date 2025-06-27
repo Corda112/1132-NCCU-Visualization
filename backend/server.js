@@ -42,6 +42,9 @@ const corsOptions = {
         // 開發環境允許無origin的請求 (如Postman)
         if (NODE_ENV === 'development' && !origin) return callback(null, true);
         
+        // 生產環境允許同源請求（前端與後端在同一域名）
+        if (NODE_ENV === 'production' && !origin) return callback(null, true);
+        
         if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
@@ -60,6 +63,9 @@ app.use(requestSizeLimit);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(sanitizeInput);
+
+// 提供前端靜態檔案
+app.use(express.static(path.join(__dirname, 'public')));
 
 // API 速率限制
 app.use('/api/', apiLimiter);
@@ -607,12 +613,18 @@ app.use((err, req, res, next) => {
     });
 });
 
-// 404處理
-app.use((req, res) => {
-    res.status(404).json({
-        error: 'Endpoint not found',
-        message: `Cannot ${req.method} ${req.path}`
-    });
+// 處理 React Router - 對於所有非 API 路由返回 index.html
+app.get('*', (req, res) => {
+    // 如果是 API 路由但找不到，返回 404 JSON
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({
+            error: 'Endpoint not found',
+            message: `Cannot ${req.method} ${req.path}`
+        });
+    }
+    
+    // 對於其他所有路由，返回 React 應用
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // 正確的關閉處理
